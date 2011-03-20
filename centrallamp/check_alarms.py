@@ -2,6 +2,7 @@ from global_config import *
 import time
 import subprocess
 import threading
+from subprocess import call
 
 class TriggerThread(threading.Thread):
     def __init__(self):
@@ -21,7 +22,7 @@ class TriggerThread(threading.Thread):
                     # TODO placeholder for BLE communication with mat
                     
                     #BLE communication with panel -- light on
-                    tcl_panel_conn.sh 0x4D
+                    subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
 
                 if DAY_NIGHT_ALARM.check_dusk_sim_alarm():
                     print "Evening alarm triggered"
@@ -30,7 +31,7 @@ class TriggerThread(threading.Thread):
                     print "LED Panel alarm triggered"
                     
                     #BLE communication with panel -- light on
-                    tcl_panel_conn.sh 0x4D
+                    subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
                     
                     time.sleep(1)
                 # sleep for a while
