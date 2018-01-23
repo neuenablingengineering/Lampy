@@ -3,8 +3,11 @@
 # manual inputs should be either 'm' (to set time/date from prompts)
 # or arg1 == 'mm/dd/yyyy' arg2 == 'hh:mm' (in 24 hr time)
 
-# stop NTP services
-pkill ntpd
+# stop NTP services -- maybe not necessary for Pi since we plan on running offline?
+#pkill ntpd
+#for ubuntu:
+
+timedatectl set-ntp 0
 
 # still need to modify this to set the date/time with  "date -s"
 # and receive the new time/date arguments from user input
@@ -20,7 +23,7 @@ then
 
 	echo "You entered $month/$day/$year $hour:$minute"
 
-MANUALDATE="$month/$day/2018 $hour:$minute"
+MANUALDATE="$month/$day/$year $hour:$minute"
 else
 MANUALDATE="$1 $2"
 
@@ -32,4 +35,8 @@ date -s "$MANUALDATE"
 date
 
 # restart NTP services
-/usr/sbin/ntpd
+#/usr/sbin/ntpd
+#for ubuntu:
+timedatectl set-ntp 1
+sleep 1
+date
