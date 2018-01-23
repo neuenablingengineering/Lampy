@@ -3,6 +3,9 @@
 # stop NTP services
 #pkill ntpd
 
+# still need to modify this to set the date/time with  "date -s"
+# and receive the new time/date arguments from user input
+
 if [ "$1" == "m" ]
 then
 	read -p 'Hour: ' hour
