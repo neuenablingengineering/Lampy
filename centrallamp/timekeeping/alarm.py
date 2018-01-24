@@ -20,3 +20,10 @@ class Alarm:
 	# getter -- return string of alarm time
 	def getAlarm(self):
 		return("%s:%s" % (self.hour, self.minute))
+	# compare alarm time to system time and return true or false
+	def checkTime(self):
+		now = datetime.datetime.now()
+		if self.hour == now.hour and self.minute == now.minute:
+			return True
+		else:
+			return False
