@@ -7,7 +7,11 @@
 #pkill ntpd
 #for ubuntu:
 
-timedatectl set-ntp 0
+#timedatectl set-ntp 0
+
+# hopefully for pi
+sudo systemctl stop ntp.service
+sudo systemctl disable ntp.service
 
 # still need to modify this to set the date/time with  "date -s"
 # and receive the new time/date arguments from user input
@@ -26,17 +30,15 @@ then
 MANUALDATE="$month/$day/$year $hour:$minute"
 else
 MANUALDATE="$1 $2"
-
 fi
-echo $MANUALDATE
 
-date -s "$MANUALDATE"
+read -p "You have entered $MANUALDATE. Set this time? [y/n] " confirm
+if [ "$confirm" == "y" ]
+then
+	date -s "$MANUALDATE"
+fi
+#date
 
-date
-
-# restart NTP services
-#/usr/sbin/ntpd
-#for ubuntu:
-timedatectl set-ntp 1
-sleep 1
-date
+# for ubuntu testing:
+#sleep 1
+#timedatectl set-ntp 1
