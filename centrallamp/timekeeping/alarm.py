@@ -1,5 +1,7 @@
 # contains classes for the clock alarm
 
+import datetime
+
 class Alarm:
 
 	def __init__(self, hour, minute):
@@ -18,4 +20,3 @@ class Alarm:
 	# getter -- return string of alarm time
 	def getAlarm(self):
 		return("%s:%s" % (self.hour, self.minute))
-	
