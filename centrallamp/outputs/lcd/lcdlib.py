@@ -51,7 +51,7 @@ class LCDCommonCommands:
     def CURSOR_SET(self, ser, pos):
         ser.write(chr(0xFE))
         ser.write(chr(0x45))
-        ser.writei(chr(pos))
+        ser.write(chr(pos))
     
     def CONTRAST_SET(self, ser, contrast):
         ser.write(chr(0xFE))
