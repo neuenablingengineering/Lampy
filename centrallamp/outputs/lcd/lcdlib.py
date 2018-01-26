@@ -53,13 +53,13 @@ class LCDCommonCommands:
         ser.write(chr(0x45))
         ser.write(chr(hex(pos)))
     
-    def CONTRAST_SET(self, ser, contrast)
+    def CONTRAST_SET(self, ser, contrast):
         ser.write(chr(0xFE))
         ser.write(chr(0x52))
         ser.write(chr(hex(contrast)))
 
-    def BRIGHTNESS_SET(self, ser, contrast)
+    def BRIGHTNESS_SET(self, ser, brightness):
         ser.write(chr(0xFE))
         ser.write(chr(0x53))
-        ser.write(chr(hex(contrast)))
+        ser.write(chr(hex(brightness)))
 
