@@ -8,7 +8,7 @@ def main():
     displayTime = threading.Thread(group=None, target=keepTime(lcd), name=Time)
 
 def keepTime(lcd):
-    while (true):
+    while (True):
         lcd.write_time_to_screen() 
         time.sleep(60)
         
