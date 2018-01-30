@@ -1,37 +1,38 @@
 import threading
 import time
 import sys
+import datetime as dt
 from outputs.lcd.display_message import LCDDisplay
+
 lcd = LCDDisplay()
 
 class TimeThread(threading.Thread):
-    def __init__(self, lcd):
+    def __init__(self):
         threading.Thread.__init__(self)
-        lcd = lcd
     def run(self):
-        currMin = datetime.minute
+        timenow = dt.datetime.now()
+        currMin = timenow.minute
+        lcd.write_time_to_screen()
         while (True):
-            if (currMin != datetime.minute
+            if (currMin != dt.datetime.now().minute):
                 lcd.write_time_to_screen()
-                currMin = datetime.minute 
-            #time.sleep(60)
+                currMin = dt.datetime.now().minute 
 
 class InputThread(threading.Thread):
-    def __init__(self, lcd):
+    def __init__(self):
         threading.Thread.__init__(self)
-        lcd = lcd
     def run(self):
         inp = raw_input("Give input:")
         lcd.write_msg_to_screen(inp)
-        time.sleep(30)
+        time.sleep(20)
         sys.exit() 
 
 def main():
     lcd_lock = threading.Lock();
 
     
-    t_thread = TimeThread(lcd)
-    inp_thread = InputThread(lcd)
+    t_thread = TimeThread()
+    inp_thread = InputThread()
     t_thread.start()
     inp_thread.start()
 
@@ -39,6 +40,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
 
