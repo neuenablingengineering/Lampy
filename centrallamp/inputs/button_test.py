@@ -4,11 +4,12 @@ import time
 
 testNum = 12
 
-def callback1(self, testNum):
-	testNum += 1
-	if testNum > 23:
-		testNum = 0
-	print testNum
+def callback1(self):
+    global testNum
+    testNum += 1
+    if testNum > 23:
+        testNum = 0
+    print testNum
 
 testButton = Button(29)
 # add an event that listens for rising or falling edges on testButton
