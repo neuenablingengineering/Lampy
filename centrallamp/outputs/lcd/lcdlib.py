@@ -1,5 +1,6 @@
 class LCDCommonCommands:
 #common commands
+    #Clears the screen and resets cursor to position 0
     def CLEAR(self, ser):
         ser.write(chr(0xFE)) 
         ser.write(chr(0x51))
@@ -53,11 +54,13 @@ class LCDCommonCommands:
         ser.write(chr(0x45))
         ser.write(chr(pos))
     
+    #Range of 1 - 50, default is 40
     def CONTRAST_SET(self, ser, contrast):
         ser.write(chr(0xFE))
         ser.write(chr(0x52))
         ser.write(chr(contrast))
 
+    #Range of 1-8, default is 5
     def BRIGHTNESS_SET(self, ser, brightness):
         ser.write(chr(0xFE))
         ser.write(chr(0x53))
