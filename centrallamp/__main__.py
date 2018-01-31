@@ -5,7 +5,7 @@ import datetime as dt
 from outputs.lcd.display_message import LCDDisplay
 
 lcd = LCDDisplay()
-lcd_lock = threading.Lock();
+lcdBool = False
 
 class TimeThread(threading.Thread):
     def __init__(self):
@@ -16,7 +16,7 @@ class TimeThread(threading.Thread):
         lcd.write_time_to_screen()
         while (True):
             if ((currMin != dt.datetime.now().minute) 
-                & !lcd_lock.locked()):
+                &  (lcdBool == False)):
                 lcd.write_time_to_screen()
                 currMin = dt.datetime.now().minute 
 
@@ -25,23 +25,20 @@ class InputThread(threading.Thread):
         threading.Thread.__init__(self)
     def run(self):
         inp = raw_input("Give input:")
-        lcd_lock.aquire()
+        lcdBool = True
         lcd.write_msg_to_screen(inp)
         time.sleep(20)
-        release_lock()
+        print "Releasing the lock"
+        lcd.write_time_to_screen()
+        lcdBool = False
         sys.exit() 
 
-def release_lock():
-    print "Releasing the lock"
-    lcd_lock.release()
-    lcd.write_time_to_screen()
-
 def main():
-    t_thread = TimeThread()
-    inp_thread = InputThread()
-    t_thread.start()
-    inp_thread.start()
-
+    tThread = TimeThread()
+    tThread.start()
+    inpThread = InputThread()
+    inpThread.start()
+            
     
 
 if __name__ == "__main__":
