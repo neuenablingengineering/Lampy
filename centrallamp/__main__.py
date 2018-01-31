@@ -4,21 +4,27 @@ from outputs.lcd.display_message import LCDDisplay
 
 
 def main():
+    lcd_lock = thread.allocate_lock();
     lcd = LCDDisplay()
-    displayTime = threading.Thread(group=None, target=keepTime(lcd), name=Time)
-    getInput = threading.Thread(group=None, target=getIn(lcd),
-name=Input)
+    displayTime = threading.Thread(group=None
+        , target=keepTime(lcd, lcd_lock)
+        , name=Time)
+    getInput = threading.Thread(group=None
+        , target=getIn(lcd, lcd_lock)
+        , name=Input)
 
-
-def keepTime(lcd):
+def keepTime(lcd, lcd_lock):
     while (True):
-        lcd.write_time_to_screen() 
-        time.sleep(60)
+        if (!lcd_lock.locked()):
+            lcd.write_time_to_screen() 
+            time.sleep(60)
 
-def getIn(lcd):
-    in = input("Input: ")
-    lcd.write_msg_to_screen(in)
+def getIn(lcd, lcd_lock):
+    inp = input("Input: ")
+    lcd_lock.aquire()
+    lcd.write_msg_to_screen(inp)
     time.sleep(30)
+    lcd_lock.release()
 
 if __name__ == "__main__":
     main()
