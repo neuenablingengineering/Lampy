@@ -35,11 +35,12 @@ GPIO.add_event_callback(hourButton.get_pin(), callback_hour)
 GPIO.add_event_callback(minButton.get_pin(), callback_min)
 
 display.write_msg_to_screen("Button Demo")
-time.sleep(10)
+time.sleep(3)
 while(True):
-    if(alarmToggle.get_state():
-        display.write_to_bottom_screen("Alarm Set Mode")
+    if(alarmToggle.get_state()):
+        display.write_msg_to_bottom_screen("Alarm Set Mode")
+        time.sleep(2)
     else:
-        display.write_to_bottom_screen("                ")
+        display.write_msg_to_bottom_screen("                ")
     display.write_msg_to_screen("Alarm: %s" % testAlarm.get_alarm())
     time.sleep(0.5)    
