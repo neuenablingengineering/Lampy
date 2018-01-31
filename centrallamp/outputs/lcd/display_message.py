@@ -22,26 +22,21 @@ class LCDDisplay:
         if (self.ser.isOpen()):
             self.com.CLEAR(self.ser)
             self.ser.write(line1)
-            self.com.CURSOR_SET(self.ser, 16)
+            self.com.CURSOR_SET(self.ser, 40)
             self.ser.write(line2)
 
-    def write_to_second_line(self, msg, offset=0):
+    def write_msg_to_first_line(self, msg, offset=0):
         if (self.ser.isOpen()):
-            self.com.clear_second_line(self.ser)
-            self.com.CURSOR_SET(self.ser, 16 + offset)
+            self.com.CLEAR_FIRST_LINE(self.ser)
+            self.com.CURSOR_SET(self.ser, 0 + offset)
             self.ser.write(msg)
     
-    def clear_first_line(self):
+    def write_msg_to_second_line(self, msg, offset=0):
         if (self.ser.isOpen()):
-            self.com.CURSOR_SET(self.ser, 15)
-            for x in range(0, 15):
-                self.com.BACKSPACE(self.ser)
-
-    def clear_second_line(self):
-        if (self.ser.isOpen()):
-            self.com.CURSOR_SET(self.ser, 31)
-            for x in range(0, 15):
-                self.com.BACKSPACE(self.ser)
+            self.com.CLEAR_SECOND_LINE(self.ser)
+            self.com.CURSOR_SET(self.ser, 40 + offset)
+            self.ser.write(msg)
+            
 
     def write_time_to_screen(self):
         if (self.ser.isOpen()):

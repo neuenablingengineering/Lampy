@@ -3,6 +3,8 @@ import time
 
 lcd = LCDDisplay()
 
+lcd.com.CURSOR_BLINK_OFF(lcd.ser);
+
 #write message to screen with default offset
 lcd.write_msg_to_screen("Hello")
 time.sleep(5)
@@ -12,26 +14,31 @@ lcd.write_msg_to_screen("hello", 6)
 time.sleep(5)
 
 #write two line message
-lcd.write_two_line_msg("line 1", "line 2")
-time.sleep(5)
-
-#clear only second line
-lcd.clear_second_line()
+lcd.write_two_line_msg("First Line", "Second Line")
 time.sleep(5)
 
 #write to second line
-lcd.write_to_second_line("second line")
-time.sleep(5)
-
-#write to second line with offset
-lcd.write_to_second_line("hello", 5)
+lcd.write_msg_to_second_line("New message")
 time.sleep(5)
 
 #clear only first line
-lcd.clear_first_line()
+lcd.com.CLEAR_FIRST_LINE(lcd.ser)
 time.sleep(5)
 
-#write time
+#write to second line with offset
+lcd.write_msg_to_second_line("Hej", 7)
+time.sleep(5)
+
+#write to first line with offset
+lcd.write_msg_to_first_line("Hello", 3)
+time.sleep(5)
+
+#clear only second line
+lcd.com.CLEAR_SECOND_LINE(lcd.ser)
+time.sleep(5)
+
+#write time to screen
 lcd.write_time_to_screen()
+
 
 

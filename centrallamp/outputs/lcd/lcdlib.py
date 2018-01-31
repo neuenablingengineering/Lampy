@@ -4,7 +4,8 @@ class LCDCommonCommands:
     def CLEAR(self, ser):
         ser.write(chr(0xFE)) 
         ser.write(chr(0x51))
-    
+
+   
     #turns on the display
     def DISPLAY_ON(self, ser):
         ser.write(chr(0xFE))
@@ -76,4 +77,16 @@ class LCDCommonCommands:
         ser.write(chr(0xFE))
         ser.write(chr(0x53))
         ser.write(chr(brightness))
+
+    def CLEAR_FIRST_LINE(self, ser):
+        ser.write(chr(0xFE))
+        ser.write(chr(0x45))
+        ser.write(chr(0))
+        ser.write("                ")
+    
+    def CLEAR_SECOND_LINE(self, ser):
+        ser.write(chr(0xFE))
+        ser.write(chr(0x45))
+        ser.write(chr(40))
+        ser.write("                ")
 
