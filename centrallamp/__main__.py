@@ -5,7 +5,6 @@ def main():
     #instantiate bright alarm? or just control in own thread
     tThread = TimeThread()
     tThread.start()
-    #pass 
     inpThread = InputThread()
     inpThread.start()
             

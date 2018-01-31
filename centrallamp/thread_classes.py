@@ -21,20 +21,22 @@ class TimeThread(threading.Thread):
 class InputThread(threading.Thread):
     toggleFlag = False
     alarmToggle = Button(11) 
+
     def __init__(self):
         threading.Thread.__init__(self)
+
     def callback_toggle(self):
         toggleFlag = True
+
     def run(self):
-        time.sleep(3)
+        GPIO.add_event_detect(alarmToggle.get_pin()
+            , GPIO.RISING,bouncetime=750)
+        GPIO.add_event_callback(alarmToggle.get_pin()
+            , callback_toggle)
         while(True):
             if(toggleFlag):
                 lcdControlBool = True
                 lcd.write_msg_to_screen("Alarm Set Mode")
-                GPIO.add_event_detect(alarmToggle.get_pin()
-                    ,GPIO.RISING,bouncetime=750)
-                GPIO.add_event_callback(alarmToggle.get_pin()
-                    ,callback_toggle)
                 #call set alarm logic
                 toggleFlag = False
                 time.sleep(5)
