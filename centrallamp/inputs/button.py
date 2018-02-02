@@ -9,7 +9,7 @@ class Button:
 		GPIO.setup(self.pinNum, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		# add event to detect rising and falling edges
 		GPIO.add_event_detect(self.pinNum,GPIO.BOTH)
-		GPIO.add_event_callback(self.pinNum, self.detectEdge)
+		GPIO.add_event_callback(self.pinNum, self.detectEdge())
 
 	def getState(self):
 		# return whether pin is "ON" or "OFF"
