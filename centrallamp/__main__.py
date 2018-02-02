@@ -8,17 +8,17 @@ def main():
     lcd = LCDDisplay()
 
     getInput = threading.Thread(group=None
-        , target=getIn(lcd, lcd_lock))
+        , target=get_in(lcd, lcd_lock))
     displayTime = threading.Thread(group=None
-        , target=keepTime(lcd, lcd_lock))
+        , target=keep_time(lcd, lcd_lock))
 
-def keepTime(lcd, lcd_lock):
+def keep_time(lcd, lcd_lock):
     while (True):
  #       if (lcd_lock.locked() == False):
         lcd.write_time_to_screen() 
         time.sleep(60)
 
-def getIn(lcd, lcd_lock):
+def get_in(lcd, lcd_lock):
     inp = raw_input('Input: ')
 #    lcd_lock.acquire()
 #    print('Lock acquired')
