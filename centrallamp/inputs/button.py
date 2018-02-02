@@ -12,7 +12,7 @@ class Button:
 		# add event to detect rising and falling edges
 		# bouncetime is in MILLISECONDS
 		GPIO.add_event_detect(self.pinNum,GPIO.BOTH,bouncetime=1000)
-		GPIO.add_event_callback(self.pinNum, self.my_callback)
+		GPIO.add_event_callback(self.pinNum, my_callback)
 
 	def getState(self):
 		# return whether pin is "ON" or "OFF"
