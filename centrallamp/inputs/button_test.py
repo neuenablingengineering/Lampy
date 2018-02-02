@@ -1,4 +1,5 @@
 from button import Button
+import RPi.GPIO as GPIO
 import time
 
 testNum = 12
