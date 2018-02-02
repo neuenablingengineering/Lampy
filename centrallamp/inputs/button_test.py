@@ -1,21 +1,18 @@
 from button import Button
+from alarm import Alarm
 import RPi.GPIO as GPIO
 import time
 
-testNum = 12
+testAlarm = Alarm(23,58)
 
-def callback1(self):
-    global testNum
-    testNum += 1
-    if testNum > 23:
-        testNum = 0
-    print testNum
+def callback1(self,myAlarm):
+	myAlarm.incHour()
 
 testButton = Button(29)
 # add an event that listens for rising or falling edges on testButton
 # set up with a debounce time in MILLISECONDS
 GPIO.add_event_detect(testButton.getPin(),GPIO.BOTH,bouncetime=1000)
-GPIO.add_event_callback(testButton.getPin(), callback1)
+GPIO.add_event_callback(testButton.getPin(), callback1(testAlarm))
 
 
 
