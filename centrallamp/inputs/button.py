@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 
-def my_callback():
+def my_callback(self):
 	print "Button pushed"
 
 class Button:
@@ -11,7 +11,7 @@ class Button:
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(self.pinNum, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		# add event to detect rising and falling edges
-		GPIO.add_event_detect(self.pinNum,GPIO.BOTH)
+		GPIO.add_event_detect(self.pinNum,GPIO.BOTH,bouncetime=300)
 		GPIO.add_event_callback(self.pinNum, my_callback)
 
 	def getState(self):
@@ -21,6 +21,3 @@ class Button:
 	#def detectEdge(self):
 	#	print "Button changed"
 	#	return True
-
-	def my_callback():
-		print "Button pressed"
