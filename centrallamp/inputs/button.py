@@ -4,12 +4,12 @@ class Button:
 
 	def __init__(self, pinNum):
 		# set GPIO mode and set selected pin for input
-		self.GPIO.setmode(GPIO.BOARD)
-		self.GPIO.setup(pinNum, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		self.pinNum=pinNum
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(self.pinNum, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 	def getState(self):
 		# return whether pin is "ON" or "OFF"
-		return self.GPIO.input(pinNum)
+		return GPIO.input(self.pinNum)
 	
 	#def detectEdge(self):
