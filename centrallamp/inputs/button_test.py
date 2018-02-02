@@ -4,4 +4,4 @@ import time
 testButton = Button(29)
 while(True):
 	print testButton.getState()
-	time.sleep(2)
+	time.sleep(5)
