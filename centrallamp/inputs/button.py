@@ -1,5 +1,8 @@
 import RPi.GPIO as GPIO
 
+def my_callback():
+	print "Button pushed"
+
 class Button:
 
 	def __init__(self, pinNum):
@@ -9,7 +12,7 @@ class Button:
 		GPIO.setup(self.pinNum, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		# add event to detect rising and falling edges
 		GPIO.add_event_detect(self.pinNum,GPIO.BOTH)
-		GPIO.add_event_callback(self.pinNum, self.my_callback)
+		GPIO.add_event_callback(self.pinNum, my_callback)
 
 	def getState(self):
 		# return whether pin is "ON" or "OFF"
