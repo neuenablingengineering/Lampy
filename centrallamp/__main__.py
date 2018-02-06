@@ -9,9 +9,12 @@ class TimeThread(threading.Thread):
         threading.Thread.__init__(self)
         lcd = lcd
     def run(self):
+        currMin = datetime.minute
         while (True):
-            lcd.write_time_to_screen()
-            time.sleep(60)
+            if (currMin != datetime.minute
+                lcd.write_time_to_screen()
+                currMin = datetime.minute 
+            #time.sleep(60)
 
 class InputThread(threading.Thread):
     def __init__(self, lcd):
