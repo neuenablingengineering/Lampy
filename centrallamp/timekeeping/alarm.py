@@ -5,7 +5,7 @@ import datetime
 class Alarm:
 
 	def __init__(self, hour, minute):
-		if hour in range(0,23) and minute in range(0,59):
+		if hour in range(0,24) and minute in range(0,60):
 			self.hour = hour
 			self.minute = minute
 		else:

@@ -4,14 +4,14 @@ from outputs.lcd.display_message import LCDDisplay
 import RPi.GPIO as GPIO
 import time
 
-testAlarm = Alarm(23,58)
+testAlarm = Alarm(20,55)
 display = LCDDisplay()
 
 def callbackHour(self):
 	global testAlarm
 	global display
 	testAlarm.inc_hour()
-def calbackMin(self):
+def callbackMin(self):
 	global testAlarm
 	global display
 	testAlarm.inc_min()
