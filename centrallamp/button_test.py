@@ -6,6 +6,7 @@ import time
 
 testAlarm = Alarm(20,55)
 display = LCDDisplay()
+toggleFlag = False
 
 def callback_hour(self):
     global testAlarm
@@ -19,8 +20,9 @@ def callback_min(self):
         testAlarm.inc_min()
 def callback_toggle(self):
     global display
+    global toggleFlag
+    toggleFlag = True
     display.write_msg_to_bottom_screen("Set Alarm Mode")
-    time.sleep(5)
 
 # define buttons and map them to GPIO pins
 alarmToggle = Button(11)
@@ -41,10 +43,9 @@ GPIO.add_event_callback(alarmToggle.get_pin(), callback_toggle)
 display.write_msg_to_screen("Button Demo")
 time.sleep(3)
 while(True):
-#    if(alarmToggle.get_state()):
-#        display.write_msg_to_bottom_screen("Alarm Set Mode")
-#        time.sleep(2)
-#    else:
-#        display.write_msg_to_bottom_screen("                ")
+    if(toggleFlag):
+        display.write_msg_to_screen("Alarm Set Mode")
+        toggleFlag = False
+        time.sleep(5)
     display.write_msg_to_screen("Alarm: %s" % testAlarm.get_alarm())
     time.sleep(0.5)    
