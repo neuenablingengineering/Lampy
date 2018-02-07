@@ -31,6 +31,7 @@ minButton = Button(31)
 # set up with a debounce time in MILLISECONDS
 GPIO.add_event_detect(hourButton.get_pin(),GPIO.BOTH,bouncetime=750)
 GPIO.add_event_detect(minButton.get_pin(),GPIO.BOTH,bouncetime=750)
+GPIO.add_event_detect(alarmToggle.get_pin(),GPIO.RISING,bouncetime=750)
 
 # add callbacks to buttons so something happens when the event happens
 GPIO.add_event_callback(hourButton.get_pin(), callback_hour)
