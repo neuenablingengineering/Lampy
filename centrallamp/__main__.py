@@ -16,7 +16,7 @@ class TimeThread(threading.Thread):
         lcd.write_time_to_screen()
         while (True):
             if ((currMin != dt.datetime.now().minute) 
-                && !lcd_lock.locked()):
+                & !lcd_lock.locked()):
                 lcd.write_time_to_screen()
                 currMin = dt.datetime.now().minute 
 
