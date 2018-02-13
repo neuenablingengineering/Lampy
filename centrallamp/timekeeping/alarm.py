@@ -14,7 +14,7 @@ class Alarm:
             self.minute = 0
     # setter -- should not allow setting outside of specified ranges
     def set_alarm(self, hour, minute):
-        if hour in range(0,23) and minute in range(0,59):
+        if hour in range(0,24) and minute in range(0,60):
             self.hour = hour
             self.minute = minute
         else:
