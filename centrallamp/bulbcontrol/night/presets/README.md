@@ -1,3 +1,0 @@
-Night Bulb Control Presets
-==========================
-

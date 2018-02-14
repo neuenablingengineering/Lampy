@@ -1,3 +1,0 @@
-Day Bulb Control
-================
-
