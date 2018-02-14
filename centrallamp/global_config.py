@@ -1,7 +1,10 @@
 from outputs.lcd.display_message import LCDDisplay
-#import dual!!!
+from timekeeping.dual_alarm import DualAlarm
+from timekeeping.alarm import Alarm
+
 
 LCD = LCDDisplay()
 LCD_CONTROL_BOOL = False
-#instantiate DualAlarm(with default)
-#instantiate PanelStayAwake()
+DAY_NIGHT_ALARM = DualAlarm()
+PANEL_STAY_AWAKE = Alarm()
+

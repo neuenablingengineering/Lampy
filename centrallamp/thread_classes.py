@@ -19,7 +19,6 @@ class TimeThread(threading.Thread):
                 currMin = dt.datetime.now().minute
 
 class InputThread(threading.Thread):
-    toggleFlag = False
     alarmToggle = Button(11) 
 
     def __init__(self):
@@ -34,15 +33,14 @@ class InputThread(threading.Thread):
         GPIO.add_event_callback(alarmToggle.get_pin()
             , callback_toggle)
         while(True):
-            if(toggleFlag):
+            if(alarmToggle.get_state()):
                 LCD_CONTROL_BOOL = True
                 LCD.write_msg_to_screen("Alarm Set Mode")
-                #call set alarm logic
-                toggleFlag = False
-                time.sleep(5)
-        LCD.write_msg_to_screen("Alarm: %s" % dualAlarm.get_alarm())
-        LCD.write_time_to_screen()
-        LCD_CONTROL_BOOL = False
-        sys.exit()
+                setAlarmMode = SetAlarmMode(DAY_NIGHT_ALARM)
+            time.sleep(5)
+            LCD.write_msg_to_screen("Alarm: %s" %
+                DAY_NIGHT_ALARM.get_morning_alarm())
+            LCD.write_time_to_screen()
+            LCD_CONTROL_BOOL = False
 
 
