@@ -4,7 +4,10 @@ from outputs.lcd.display_message import LCDDisplay
 import RPi.GPIO as GPIO
 import time
 
-class SetAlarmMode(self, dualAlarm):
+class SetAlarmMode:
+    
+    def __init__(self, dualAlarm):
+        self.dualAlarm = dualAlarm
 
     def callback_hour(self):
         dualAlarm.inc_hour()
