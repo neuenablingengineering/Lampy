@@ -18,28 +18,32 @@ def callback_toggle(channel):
     if (TOGGLE_FLAG == True):
         LCD_CONTROL_BOOL = True
         LCD.write_msg_to_screen("Set Alarm Mode")
-        time.sleep(5)
+        time.sleep(2)
         LCD.write_msg_to_screen("Alarm: %s" 
-            % DAY_NIGHT_ALARM.get_morning_alarm())
-        GPIO.add_event_detect(hourButton.get_pin()
-            , GPIO.BOTH
-            , callback = callback_hour
-            , bouncetime=750)
-        GPIO.add_event_detect(minButton.get_pin()
-            , GPIO.BOTH
-            , callback = callback_min
-            , bouncetime=750)
+        % DAY_NIGHT_ALARM.get_morning_alarm())
+        if 'hourEvent' not in locals():
+            hourEvent = GPIO.add_event_detect(hourButton.get_pin()
+                , GPIO.BOTH
+                , callback = callback_hour
+                , bouncetime=750)
+        if 'minEvent' not in locals():
+            minEvent = GPIO.add_event_detect(minButton.get_pin()
+                , GPIO.BOTH
+                , callback = callback_min
+                , bouncetime=750)
         LCD_CONTROL_BOOL = False
     #TOGGLE_FLAG = not TOGGLE_FLAG 
 
 def callback_hour(channel):
     if (TOGGLE_FLAG):
+        print "CALLBACK HOUR"
         DAY_NIGHT_ALARM.increment_both_hour()
         LCD.write_msg_to_screen("Alarm: %s" 
             % DAY_NIGHT_ALARM.get_morning_alarm())
     
 def callback_min(channel):
     if (TOGGLE_FLAG):
+        print "CALLBACK MIN"
         DAY_NIGHT_ALARM.increment_both_min()
         LCD.write_msg_to_screen("Alarm: %s"
             % DAY_NIGHT_ALARM.get_morning_alarm())
