@@ -1,5 +1,7 @@
 from outputs.lcd.display_message import LCDDisplay
+#import dual!!!
 
-lcd = LCDDisplay()
-lcdControlBool = False
+LCD = LCDDisplay()
+LCD_CONTROL_BOOL = False
 #instantiate DualAlarm(with default)
+#instantiate PanelStayAwake()

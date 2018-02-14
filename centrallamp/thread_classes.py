@@ -35,14 +35,14 @@ class InputThread(threading.Thread):
             , callback_toggle)
         while(True):
             if(toggleFlag):
-                lcdControlBool = True
-                lcd.write_msg_to_screen("Alarm Set Mode")
+                LCD_CONTROL_BOOL = True
+                LCD.write_msg_to_screen("Alarm Set Mode")
                 #call set alarm logic
                 toggleFlag = False
                 time.sleep(5)
-        lcd.write_msg_to_screen("Alarm: %s" % dualAlarm.get_alarm())
-        lcd.write_time_to_screen()
-        lcdControlBool = False
+        LCD.write_msg_to_screen("Alarm: %s" % dualAlarm.get_alarm())
+        LCD.write_time_to_screen()
+        LCD_CONTROL_BOOL = False
         sys.exit()
 
 
