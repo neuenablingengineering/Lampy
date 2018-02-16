@@ -5,24 +5,27 @@ import time
 
 class Bulb:
 
-    FREQENCY = 1000
-    SLEEP_DURING_TRANSITION_ON = 0.2
-    SLEEP_DURING_TRANSITION_OFF = 0.1
+    FREQUENCY = 1000
 
-    def __init__(self, pinNum, maxDutyCycle):
+    def __init__(self, pinNum, maxDutyCycle=80, transitionSleep=0.2):
         self.pinNum = pinNum
         self.maxDutyCycle = maxDutyCycle
+        self.transitionSleep = transitionSleep
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.pinNum,GPIO.OUT)
-        self.pwm = GPIO.PWM(self.pinNum,Bulb.FREQENCY)
+        self.pwm = GPIO.PWM(self.pinNum,Bulb.FREQUENCY)
         self.pwm.start(0)
 
     def transition_on(self):
         for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(x)
-            time.sleep(Bulb.SLEEP_DURING_TRANSITION_ON)
+            time.sleep(self.transitionSleep)
 
     def transition_off(self):
         for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(self.maxDutyCycle - x)
-            time.sleep(Bulb.SLEEP_DURING_TRANSITION_OFF)
+            time.sleep(self.transitionSleep)
+
+    def turn_off(self):
+        self.pwm.stop()
+        GPIO.cleanup()
