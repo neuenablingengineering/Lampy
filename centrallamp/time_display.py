@@ -13,6 +13,6 @@ def time_display():
             &  (LCD_CONTROL_BOOL == False)):
             LCD.write_time_to_screen()
             currMin = dt.datetime.now().minute
-        time.sleep(45)
+            time.sleep(45)
 
 
