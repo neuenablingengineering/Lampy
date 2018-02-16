@@ -1,10 +1,10 @@
-import threading
-import time
-import sys
-import datetime as dt
+#Class for the Set Alarm Thread
+#Thread waits for the Toggle Button, and then allows the alarm to be
+#set using the push buttons
+
+from global_config import *
 import RPi.GPIO as GPIO
 from inputs.button import Button
-from global_config import *
 from inputs.set_alarm_mode import SetAlarmMode
 
 global TOGGLE_FLAG
@@ -35,19 +35,6 @@ def callback_min(channel):
         DAY_NIGHT_ALARM.increment_both_min()
         LCD.write_msg_to_screen("Alarm: %s"
             % DAY_NIGHT_ALARM.get_morning_alarm())
-
-class TimeThread(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        timenow = dt.datetime.now()
-        currMin = timenow.minute
-        LCD.write_time_to_screen()
-        while (True):
-            if ((currMin != dt.datetime.now().minute)
-                &  (LCD_CONTROL_BOOL == False)):
-                LCD.write_time_to_screen()
-                currMin = dt.datetime.now().minute
 
 class InputThread(threading.Thread):
     def __init__(self):
