@@ -8,30 +8,25 @@ from inputs.button import Button
 from inputs.set_alarm_mode import SetAlarmMode
 
 global TOGGLE_FLAG
+TOGGLE_FLAG = False
+
 def callback_toggle(channel):
     global TOGGLE_FLAG
-    TOGGLE_FLAG = not TOGGLE_FLAG
-    print TOGGLE_FLAG 
-    if (TOGGLE_FLAG == True):
+    TOGGLE_FLAG = not TOGGLE_FLAG 
+    if (TOGGLE_FLAG):
         LCD_CONTROL_BOOL = True
         LCD.write_msg_to_screen("Set Alarm Mode")
-        time.sleep(2)
-        LCD.write_msg_to_screen("Alarm: %s" 
-        % DAY_NIGHT_ALARM.get_morning_alarm())
-        time.sleep(3)
+    else:
         LCD_CONTROL_BOOL = False
+
 
 def callback_hour(channel):
     if (TOGGLE_FLAG):
         DAY_NIGHT_ALARM.increment_both_hour()
-        LCD.write_msg_to_screen("Alarm: %s" 
-            % DAY_NIGHT_ALARM.get_morning_alarm())
     
 def callback_min(channel):
     if (TOGGLE_FLAG):
         DAY_NIGHT_ALARM.increment_both_min()
-        LCD.write_msg_to_screen("Alarm: %s"
-            % DAY_NIGHT_ALARM.get_morning_alarm())
 
 class SetAlarmThread(threading.Thread):
     def __init__(self):
@@ -39,7 +34,6 @@ class SetAlarmThread(threading.Thread):
 
     def run(self):
         global TOGGLE_FLAG
-        TOGGLE_FLAG = False
 
         alarmToggle = Button(11) 
         hourButton = Button(29)
@@ -61,4 +55,8 @@ class SetAlarmThread(threading.Thread):
             , callback = callback_min
             , bouncetime=750)
 
-        #while True:
+        while(True):
+            if (LCD_CONTROL_BOOL):
+                LCD.write_msg_to_screen("Alarm: %s" %
+                        DAY_NIGHT_ALARM.get_morning_alarm())
+                time.sleep(0.5)
