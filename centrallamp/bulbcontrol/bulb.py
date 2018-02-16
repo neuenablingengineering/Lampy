@@ -14,15 +14,15 @@ class Bulb:
         self.maxDutyCycle = maxDutyCycle
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.pinNum,GPIO.OUT)
-        self.pwm = GPIO.PWM(self.pinNum,FREQENCY)
+        self.pwm = GPIO.PWM(self.pinNum,Bulb.FREQENCY)
         self.pwm.start(0)
 
     def transition_on(self):
         for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(x)
-            time.sleep(SLEEP_DURING_TRANSITION_ON)
+            time.sleep(Bulb.SLEEP_DURING_TRANSITION_ON)
 
     def transition_off(self):
         for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(self.maxDutyCycle - x)
-            time.sleep(SLEEP_DURING_TRANSITION_OFF)
+            time.sleep(Bulb.SLEEP_DURING_TRANSITION_OFF)
