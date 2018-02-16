@@ -28,4 +28,3 @@ class Bulb:
 
     def turn_off(self):
         self.pwm.stop()
-        GPIO.cleanup()
