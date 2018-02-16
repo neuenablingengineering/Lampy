@@ -1,6 +1,5 @@
 #Class for the Thread that displays time to the LCD
 from global_config import *
-import datetime as dt
 
 
 class TimeThread(threading.Thread):

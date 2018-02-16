@@ -1,11 +1,12 @@
 from global_config import *
-from thread_classes import *
+from time_thread import TimeThread
+from set_alarm_thread import SetAlarmThread
 
 def main():
     tThread = TimeThread()
     tThread.start()
-    inpThread = InputThread()
-    inpThread.start()
+    setAlarmThread = SetAlarmThread()
+    setAlarmThread.start()
             
     
 
