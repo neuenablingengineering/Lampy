@@ -14,5 +14,6 @@ class TimeThread(threading.Thread):
                 &  (LCD_CONTROL_BOOL == False)):
                 LCD.write_time_to_screen()
                 currMin = dt.datetime.now().minute
+                time.sleep(45)
 
 
