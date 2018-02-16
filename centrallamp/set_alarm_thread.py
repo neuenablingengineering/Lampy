@@ -10,6 +10,7 @@ from inputs.set_alarm_mode import SetAlarmMode
 global TOGGLE_FLAG
 def callback_toggle(channel):
     global TOGGLE_FLAG
+    TOGGLE_FLAG = not TOGGLE_FLAG
     print TOGGLE_FLAG 
     if (TOGGLE_FLAG == True):
         LCD_CONTROL_BOOL = True
@@ -17,6 +18,7 @@ def callback_toggle(channel):
         time.sleep(2)
         LCD.write_msg_to_screen("Alarm: %s" 
         % DAY_NIGHT_ALARM.get_morning_alarm())
+        time.sleep(3)
         LCD_CONTROL_BOOL = False
 
 def callback_hour(channel):
@@ -36,13 +38,16 @@ class SetAlarmThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
+        global TOGGLE_FLAG
+        TOGGLE_FLAG = False
+
         alarmToggle = Button(11) 
         hourButton = Button(29)
         minButton = Button(31)
 
         #callback for the toggle button
         GPIO.add_event_detect(alarmToggle.get_pin()
-            , GPIO.RISING
+            , GPIO.BOTH
             , callback = callback_toggle
             , bouncetime=750)
         #callback for the hour button
@@ -56,3 +61,4 @@ class SetAlarmThread(threading.Thread):
             , callback = callback_min
             , bouncetime=750)
 
+        #while True:
