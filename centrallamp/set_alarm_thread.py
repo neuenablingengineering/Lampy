@@ -13,11 +13,9 @@ TOGGLE_FLAG = False
 def callback_toggle(channel):
     global TOGGLE_FLAG
     TOGGLE_FLAG = not TOGGLE_FLAG 
+    LCD_CONTROL_BOOL = TOGGLE_FLAG
     if (TOGGLE_FLAG):
-        LCD_CONTROL_BOOL = True
         LCD.write_msg_to_screen("Set Alarm Mode")
-    else:
-        LCD_CONTROL_BOOL = False
 
 
 def callback_hour(channel):
