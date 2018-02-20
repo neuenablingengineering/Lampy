@@ -21,7 +21,17 @@ class Alarm:
             print("Error: Not in range")
     # getter -- return string of alarm time
     def get_alarm(self):
-        return("%02d:%02d" % (self.hour, self.minute))
+        # set the correct AM/PM to display on clock
+        if self.hour > 11:
+            self.period = "PM"
+        else:
+            self.period = "AM"
+        if self.hour%12 == 0:
+            # use a temp variable to print "12" instead of "00"
+            tempHour = 12
+            return("%02d:%02d %s" % (tempHour, self.minute, self.period))
+        else:
+            return("%02d:%02d %s" % ((self.hour%12), self.minute, self.period))
     # compare alarm time to system time and return true or false
     def check_time(self):
         now = datetime.datetime.now()
