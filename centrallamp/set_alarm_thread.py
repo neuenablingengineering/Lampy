@@ -30,41 +30,37 @@ def callback_min(channel):
         print "min increment"
         DAY_NIGHT_ALARM.increment_both_min()
 
-class SetAlarmThread(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
+def set_alarm_thread():
+    global TOGGLE_FLAG
+    global LCD_CONTROL_BOOL
 
-    def run(self):
-        global TOGGLE_FLAG
-        global LCD_CONTROL_BOOL
+    alarmToggle = Button(11) 
+    hourButton = Button(29)
+    minButton = Button(31)
 
-        alarmToggle = Button(11) 
-        hourButton = Button(29)
-        minButton = Button(31)
-
-        #callback for the toggle button
-        GPIO.add_event_detect(alarmToggle.get_pin()
-            , GPIO.BOTH
-            , callback = callback_toggle
-            , bouncetime=1000)
-        #callback for the hour button
-        GPIO.add_event_detect(hourButton.get_pin()
-            , GPIO.BOTH
-            , callback = callback_hour
-            , bouncetime=750)
-        #callback for the minute button
-        GPIO.add_event_detect(minButton.get_pin()
-            , GPIO.BOTH
-            , callback = callback_min
-            , bouncetime=750)
+    #callback for the toggle button
+    GPIO.add_event_detect(alarmToggle.get_pin()
+        , GPIO.BOTH
+        , callback = callback_toggle
+        , bouncetime=1000)
+    #callback for the hour button
+    GPIO.add_event_detect(hourButton.get_pin()
+        , GPIO.BOTH
+        , callback = callback_hour
+        , bouncetime=750)
+    #callback for the minute button
+    GPIO.add_event_detect(minButton.get_pin()
+        , GPIO.BOTH
+        , callback = callback_min
+        , bouncetime=750)
         
-        while (True):
-            if (LCD_CONTROL_BOOL):
-                LCD.write_msg_to_screen("Set Alarm Mode")
-                time.sleep(2)
-                while (LCD_CONTROL_BOOL):
-                    LCD.write_msg_to_screen("Alarm: %s" %
-                        DAY_NIGHT_ALARM.get_morning_alarm())
-                    time.sleep(0.5)
+    while (True):
+        if (LCD_CONTROL_BOOL):
+            LCD.write_msg_to_screen("Set Alarm Mode")
+            time.sleep(2)
+            while (LCD_CONTROL_BOOL):
+                LCD.write_msg_to_screen("Alarm: %s" %
+                    DAY_NIGHT_ALARM.get_morning_alarm())
+                time.sleep(0.5)
  
 
