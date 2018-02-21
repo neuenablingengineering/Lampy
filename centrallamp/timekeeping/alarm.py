@@ -31,7 +31,7 @@ class Alarm:
             tempHour = 12
             return("%02d:%02d %s" % (tempHour, self.minute, self.period))
         else:
-            return("%02d:%02d %s" % ((self.hour%12), self.minute, self.period))
+            return("%02d:%02d %s" % ((self.hour % 12), self.minute, self.period))
     # compare alarm time to system time and return true or false
     def check_time(self):
         now = datetime.datetime.now()
