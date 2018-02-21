@@ -26,7 +26,7 @@ class Alarm:
             self.period = "PM"
         else:
             self.period = "AM"
-        if self.hour%12 == 0:
+        if self.hour % 12 == 0:
             # use a temp variable to print "12" instead of "00"
             tempHour = 12
             return("%02d:%02d %s" % (tempHour, self.minute, self.period))
