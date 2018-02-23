@@ -1,11 +1,10 @@
-#Class for the Set Alarm Thread
-#Thread waits for the Toggle Button, and then allows the alarm to be
-#set using the push buttons
+#Contains functions for setting the alarm. 
+# - Callbacks for the hour and minute button
+# - The function that sets up the callbacks and displays to the LCD
 
 from global_config import *
 import RPi.GPIO as GPIO
 from inputs.button import Button
-from inputs.set_alarm_mode import SetAlarmMode
 
 global TOGGLE_FLAG
 global LCD_CONTROL_BOOL
@@ -30,7 +29,7 @@ def callback_min(channel):
         print "min increment"
         DAY_NIGHT_ALARM.increment_both_min()
 
-def set_alarm_thread():
+def set_alarm_main():
     global TOGGLE_FLAG
     global LCD_CONTROL_BOOL
 
