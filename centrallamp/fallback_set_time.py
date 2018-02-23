@@ -53,3 +53,4 @@ while not ISDONE:
 
 display.write_msg_to_screen(" ")
 print get_time()
+GPIO.cleanup()
