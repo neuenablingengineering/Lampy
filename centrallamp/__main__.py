@@ -1,13 +1,15 @@
-from multiprocessing import Process
 from global_config import *
 from time_display import *
 from set_alarm import *
+from check_alarms import TriggerThread
 
 def main():
-    timeProc = Process(target = time_display)
-    setAlarmProc = Process(target = set_alarm_main)
-    timeProc.start()
-    setAlarmProc.start()
+    tThread = TimeThread()
+    tThread.start()
+    setAlarmThread = SetAlarmThread()
+    setAlarmThread.start()
+    triggerThread = TriggerThread()
+    triggerThread.start()
             
     
 

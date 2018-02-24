@@ -11,6 +11,10 @@ def main():
     timeProc.start()
     setAlarmProc.start()
     checkAlarmProc.start()
+    global DAY_NIGHT_ALARM
+    while (True):
+        DAY_NIGHT_ALARM.print_both()
+        time.sleep(3)
             
     
 
