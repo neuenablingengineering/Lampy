@@ -33,8 +33,7 @@ def get_time():
     else:
         PERIOD = "AM"
     if HOUR % 12 == 0:
-        tempHour = 12
-        return("%02d:%02d %s" % (tempHour, MINUTE, PERIOD))
+        return("12:%02d %s" % (MINUTE, PERIOD))
     else:
         return("%02d:%02d %s" % (HOUR % 12, MINUTE, PERIOD))
 
