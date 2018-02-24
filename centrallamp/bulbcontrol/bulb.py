@@ -33,3 +33,6 @@ class Bulb:
 
     def turn_off(self):
         self.pwm.stop()
+
+    def change_duty_cycle(self, dutyCycle):
+        self.pwm.ChangeDutyCycle(dutyCycle)
