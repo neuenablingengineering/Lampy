@@ -27,7 +27,8 @@ class TriggerThread(threading.Thread):
                 # TODO placeholder for BLE communication with panel
                 time.sleep(1)
             # sleep for a while
-            print "Sleeping for twenty seconds..."
-            DAY_NIGHT_ALARM.print_both()
-            time.sleep(20)
-     
+            else:
+                print "Sleeping for twenty seconds..."
+                DAY_NIGHT_ALARM.print_both()
+                time.sleep(20)
+         

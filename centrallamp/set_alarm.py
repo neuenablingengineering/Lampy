@@ -1,23 +1,24 @@
-#Contains functions for setting the alarm. 
-# - Callbacks for the hour and minute button
-# - The function that sets up the callbacks and displays to the LCD
+# For setting the alarm
+# Contains: 
+# - Callbacks for the toggle, hour, and minute button
+# - Thread Class SetAlarmThread
 from global_config import *
 import RPi.GPIO as GPIO
 from inputs.button import Button
 import threading
+import time
 
 global TOGGLE_FLAG
-global LCD_CONTROL_BOOL
 global DAY_NIGHT_ALARM
 TOGGLE_FLAG = False
 
+#Toggles Set Alarm Mode
 def callback_toggle(channel):
     global TOGGLE_FLAG
     global LCD_CONTROL_BOOL
     TOGGLE_FLAG = not TOGGLE_FLAG 
-    LCD_CONTROL_BOOL = TOGGLE_FLAG 
-    print "CALLBACK: " + str(LCD_CONTROL_BOOL)
-    if (LCD_CONTROL_BOOL == False):
+    print "CALLBACK: " + str(TOGGLE_FLAG)
+    if (TOGGLE_FLAG == False):
         LCD.write_time_to_screen()
             
 def callback_hour(channel):
@@ -35,10 +36,10 @@ def callback_min(channel):
 class SetAlarmThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-
+    
+    #Sets up callbacks, displays alarm information to LCD 
     def run(self):
         global TOGGLE_FLAG
-        global LCD_CONTROL_BOOL
 
         alarmToggle = Button(11) 
         hourButton = Button(29)
@@ -62,10 +63,10 @@ class SetAlarmThread(threading.Thread):
             
         while (True):
             global DAY_NIGHT_ALARM
-            if (LCD_CONTROL_BOOL):
+            if (TOGGLE_FLAG):
                 LCD.write_msg_to_screen("Set Alarm Mode")
                 time.sleep(2)
-                while (LCD_CONTROL_BOOL):
+                while (TOGGLE_FLAG):
                     LCD.write_msg_to_screen("Alarm: %s" %
                         DAY_NIGHT_ALARM.get_morning_alarm())
                     time.sleep(0.5)
