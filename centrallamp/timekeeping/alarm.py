@@ -1,10 +1,11 @@
-# contains classes for the clock alarm
+# Contains Alarm class
 
 import datetime
 
 class Alarm:
-
-    def __init__(self, hour, minute):
+    
+    #default chosen based on the afternoon bright light alarm
+    def __init__(self, hour=16, minute=0):
         if hour in range(0,24) and minute in range(0,60):
             self.hour = hour
             self.minute = minute
