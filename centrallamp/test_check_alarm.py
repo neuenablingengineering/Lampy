@@ -2,6 +2,7 @@ from multiprocessing import Process
 from global_config import *
 from time_display import *
 from set_alarm import *
+from check_alarms import *
 
 def main():
     timeProc = Process(target = time_display)
