@@ -19,6 +19,6 @@ def check_alarms_main():
             LAMP_BULBS.evening_sequence()
         if PANEL_STAY_AWAKE.check_time():
             # TODO placeholder for BLE communication with panel
-    # sleep for a while
-    time.sleep(60)
+        # sleep for a while
+        time.sleep(60)
  
