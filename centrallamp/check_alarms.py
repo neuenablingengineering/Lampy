@@ -13,7 +13,7 @@ class TriggerThread(threading.Thread):
         while(True):
             if DAY_NIGHT_ALARM.check_morning_alarm():
                 print "Morning alarm triggered"
-                # LAMP_BULBS.morning_sequence()
+                LAMP_BULBS.morning_sequence()
                 # TODO stop the music from playing with BLE mat input
                 # TODO add '--loop' arg once BLE mat stop is enabled
                 subprocess.Popen(['omxplayer','--no-keys',  '--amp', '1000', 'outputs/sound/chiming-out_foolboymedia.mp3'])
@@ -27,8 +27,7 @@ class TriggerThread(threading.Thread):
                 # TODO placeholder for BLE communication with panel
                 time.sleep(1)
             # sleep for a while
-            else:
-                print "Sleeping for twenty seconds..."
-                DAY_NIGHT_ALARM.print_both()
-                time.sleep(20)
-         
+            print "Sleeping for twenty seconds..."
+            DAY_NIGHT_ALARM.print_both()
+            time.sleep(20)
+     
