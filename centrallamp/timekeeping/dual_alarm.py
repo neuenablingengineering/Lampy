@@ -42,6 +42,10 @@ class DualAlarm:
         self.morningAlarm.inc_min()
         self.duskAlarm.inc_min()
 
+    def print_both(self):
+        print("Morning Alarm: %s" % self.morningAlarm.get_alarm())
+        print("Dusk Alarm: %s" % self.duskAlarm.get_alarm())
+
     # Reset alarm times with morning 8:30 alarm
     def reset(self):
         self.morningAlarm.set_alarm(HOUR,MINUTE)
