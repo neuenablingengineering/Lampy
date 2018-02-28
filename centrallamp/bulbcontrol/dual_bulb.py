@@ -16,3 +16,13 @@ class DualBulb:
             self.dayBulb.change_duty_cycle(self.maxDutyCycle - x)
             self.nightBulb.change_duty_cycle(x)
             time.sleep(10)
+
+    def turn_on(self):
+        # set the bulbs to ON mode
+        self.dayBulb.turn_on()
+        self.nightBulb.turn_on()
+
+    def turn_off(self)
+        # set the bulbs to OFF mode
+        self.dayBulb.turn_off()
+        self.nightBulb.turn_off()
