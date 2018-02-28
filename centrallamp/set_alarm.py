@@ -18,8 +18,9 @@ def callback_toggle(channel):
     global LCD_CONTROL_BOOL
     global DAY_NIGHT_ALARM
     TOGGLE_FLAG = not TOGGLE_FLAG 
-    DAY_NIGHT_ALARM.enter_set_mode()
     print "CALLBACK: " + str(TOGGLE_FLAG)
+    if (TOGGLE_FLAG == True):
+        DAY_NIGHT_ALARM.enter_set_mode()
     if (TOGGLE_FLAG == False):
         DAY_NIGHT_ALARM.exit_set_mode()
         LCD.write_time_to_screen()
