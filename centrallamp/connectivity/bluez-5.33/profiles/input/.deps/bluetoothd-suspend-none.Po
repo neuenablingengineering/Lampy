@@ -1,0 +1,10 @@
+profiles/input/bluetoothd-suspend-none.o: profiles/input/suspend-none.c \
+ /usr/include/stdc-predef.h config.h src/log.h profiles/input/suspend.h
+
+/usr/include/stdc-predef.h:
+
+config.h:
+
+src/log.h:
+
+profiles/input/suspend.h:
