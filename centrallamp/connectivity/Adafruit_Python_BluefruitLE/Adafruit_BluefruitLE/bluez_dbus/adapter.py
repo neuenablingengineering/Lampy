@@ -65,15 +65,21 @@ class BluezAdapter(Adapter):
 
     def start_scan(self, timeout_sec=TIMEOUT_SEC):
         """Start scanning for BLE devices with this adapter."""
+        print("has started scanning")
         self._scan_started.clear()
+        print("has cleared")
         self._adapter.StartDiscovery()
+        print("has started discovery")
         if not self._scan_started.wait(timeout_sec):
             raise RuntimeError('Exceeded timeout waiting for adapter to start scanning!')
 
     def stop_scan(self, timeout_sec=TIMEOUT_SEC):
         """Stop scanning for BLE devices with this adapter."""
+        print("entered stop scanning")
         self._scan_stopped.clear()
+        print("cleared in stop scanning")
         self._adapter.StopDiscovery()
+        print("stop discovery")
         if not self._scan_stopped.wait(timeout_sec):
             raise RuntimeError('Exceeded timeout waiting for adapter to stop scanning!')
 

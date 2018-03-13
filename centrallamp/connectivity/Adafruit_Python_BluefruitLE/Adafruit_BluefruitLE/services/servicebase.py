@@ -40,6 +40,7 @@ class ServiceBase(object):
         it, or None if no device is found.  Will wait for up to timeout_sec
         seconds to find the device.
         """
+        print("FINDING DEVICE")
         return get_provider().find_device(service_uuids=cls.ADVERTISED, timeout_sec=timeout_sec)
 
     @classmethod

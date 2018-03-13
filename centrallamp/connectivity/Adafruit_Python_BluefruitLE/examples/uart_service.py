@@ -32,6 +32,7 @@ def main():
     # Scan for UART devices.
     print('Searching for UART device...')
     try:
+        print("UART.FIND_DEVICE")
         adapter.start_scan()
         # Search for the first UART device found (will time out after 60 seconds
         # but you can specify an optional timeout_sec parameter to change it).
@@ -40,6 +41,7 @@ def main():
             raise RuntimeError('Failed to find UART device!')
     finally:
         # Make sure scanning is stopped before exiting.
+        print("FINALLY")
         adapter.stop_scan()
 
     print('Connecting to device...')
