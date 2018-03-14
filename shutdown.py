@@ -1,3 +1,2 @@
-
 def shutdown():
-    os.system("sudo poweroff")
+    os.system("shutdown now -h")

@@ -4,7 +4,10 @@ import time
 IO.setwarnings(False)
 IO.setmode(IO.BCM)
 
+# BOARD pin 12
 IO.setup(18,IO.OUT)
+
+# BOARD pin 13
 IO.setup(27,IO.OUT)
 
 p=IO.PWM(18,1000)
