@@ -9,6 +9,7 @@ class DualAlarm:
     def __init__(self, hour=HOUR, minute=MINUTE):
         self.morningAlarm = Alarm(hour%24,minute%60)
         self.duskAlarm = Alarm((hour-OFFSET)%24, minute%60)
+        self.setAlarmMode = False
 
     # Sets the morning alarm to specified time
     # Dusk alarm is set 9 hours before morning
@@ -42,7 +43,22 @@ class DualAlarm:
         self.morningAlarm.inc_min()
         self.duskAlarm.inc_min()
 
+    def print_both(self):
+        print("Morning Alarm: %s" % self.morningAlarm.get_alarm())
+        print("Dusk Alarm: %s" % self.duskAlarm.get_alarm())
+
+    # Set flag for 'Set Alarm Mode' for use with check_alarms thread
+    def enter_set_mode(self):
+        self.setAlarmMode = True
+    def exit_set_mode(self):
+        self.setAlarmMode = False
+
+    # Check flag for 'Set Alarm Mode' for use with check_alarms thread
+    def get_alarm_mode(self):
+        return self.setAlarmMode
+
     # Reset alarm times with morning 8:30 alarm
     def reset(self):
         self.morningAlarm.set_alarm(HOUR,MINUTE)
         self.duskAlarm.set_alarm((HOUR-OFFSET)%24,MINUTE)
+        self.setAlarmMode = False
