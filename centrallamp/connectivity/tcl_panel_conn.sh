@@ -5,13 +5,13 @@ set prompt "#"
 spawn bluetoothctl
 expect $prompt
 
-#send -- "power on"
+#send -- "power on\r"
 #expect "Agent registered"
 #expect $prompt
 
-#send -- "agent on"
-#expect "Agent registered"
-#expect $prompt
+send -- "agent on\r"
+expect "Agent registered"
+expect $prompt
 
 send -- "trust C0:0F:3E:A9:48:2C\r"
 expect "trust succeeded"
@@ -28,6 +28,7 @@ expect $prompt
 send -- "select-attribute /org/bluez/hci0/dev_C0_0F_3E_A9_48_2C/service0009/char000a\r"
 expect $prompt
 
+#Currently sends an M
 send -- "write 0x4D\r"
 expect $prompt
 
