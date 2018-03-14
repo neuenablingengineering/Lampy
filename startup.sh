@@ -19,10 +19,9 @@ sudo hciconfig hci0 up
 python __main__.py &
 
 # 4.5 listen for TURN_OFF signal (GPIO)
-#       TODO shutdown.py
+#       TODO shutdown.py - will be the callback for the ON/OFF button
 #           turn off bulbs
 #           close BLE
 #           close GPIO
 #           flush serial
 
-python shutdown.py &
