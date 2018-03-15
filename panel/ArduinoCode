@@ -1,0 +1,174 @@
+#include <pins_arduino.h>
+#include <SPI.h>
+#include "Adafruit_BLE_UART.h"
+
+// Connect CLK/MISO/MOSI to hardware SPI
+// e.g. On UNO & compatible: CLK = 13, MISO = 12, MOSI = 11
+#define ADAFRUITBLE_REQ 10
+#define ADAFRUITBLE_RDY 2     // This should be an interrupt pin, on Uno thats #2 or #3
+#define ADAFRUITBLE_RST 9
+
+Adafruit_BLE_UART BTLEserial = Adafruit_BLE_UART(ADAFRUITBLE_REQ, ADAFRUITBLE_RDY, ADAFRUITBLE_RST);
+
+/*==============================================================================
+ * GLOBAL VARIABLES
+ *============================================================================*/
+
+// Used for generating interrupts using CLK signal
+const int PinA = 21;
+// Used for reading DT signal
+const int PinB = 20;
+//Used for reading push button
+const int Pin_button = 22;
+
+// Keep track of last rotary value
+int lastCount = 50;
+// Updated by the ISR (Interrupt Service Routine)
+volatile int virtualPosition = 0;
+
+//LEDs
+const int LEDPin_main = 3;
+const int LEDPin_warning = 4;
+const int LEDIndicator = 5;
+
+int warning_output;
+
+
+// ------------------------------------------------------------------
+// INTERRUPT     INTERRUPT     INTERRUPT     INTERRUPT     INTERRUPT
+// ------------------------------------------------------------------
+void isrA ()  {
+  static unsigned long lastInterruptTime = 0;
+  unsigned long interruptTime = millis();
+
+  // If interrupts come faster than 5ms, assume it's a bounce and ignore
+  if (interruptTime - lastInterruptTime > 5) {
+
+    byte pinB = digitalRead(PinB);
+    if (pinB == 1)
+    {
+      virtualPosition++ ; // Could be -5 or -10
+    }
+    else {
+      virtualPosition-- ; // Could be +5 or +10
+    }
+
+    // Restrict value from 0 to +100
+    virtualPosition = min(250, max(0, virtualPosition));
+  }
+
+  // Keep track of when we were here last (no more than every 5ms)
+  lastInterruptTime = interruptTime;
+}
+
+void isrB ()  {
+  static unsigned long lastInterruptTime = 0;
+  unsigned long interruptTime = millis();
+
+  // If interrupts come faster than 5ms, assume it's a bounce and ignore
+  if (interruptTime - lastInterruptTime > 5) {
+
+    byte pinA = digitalRead(PinA);
+    if (pinA == 0)
+    {
+      virtualPosition++ ; // Could be -5 or -10
+    }
+    else{
+      virtualPosition-- ; // Could be +5 or +10
+    }
+
+    // Restrict value from 0 to +100
+    virtualPosition = min(250, max(0, virtualPosition));
+  }
+  // Keep track of when we were here last (no more than every 5ms)
+  lastInterruptTime = interruptTime;
+}
+
+// ------------------------------------------------------------------
+// SETUP    SETUP    SETUP    SETUP    SETUP    SETUP    SETUP
+// ------------------------------------------------------------------
+void setup() {
+  Serial.begin(9600);
+  while(!Serial); // Leonardo/Micro should wait for serial init
+  Serial.println(F("Adafruit Bluefruit Low Energy nRF8001 Print echo demo"));
+
+  // BTLEserial.setDeviceName("NEWNAME"); /* 7 characters max! */
+
+  BTLEserial.begin();
+  
+  // Rotary pulses are INPUTs
+  pinMode(PinA, INPUT_PULLUP);
+  pinMode(PinB, INPUT_PULLUP);
+  pinMode(Pin_button, INPUT_PULLUP);
+  pinMode(LEDPin_main, OUTPUT);
+  pinMode(LEDPin_warning, OUTPUT);
+  pinMode(LEDIndicator, OUTPUT);
+
+  // Attach the routine to service the interrupts
+  attachInterrupt(PinA, isrA, LOW);
+  attachInterrupt(PinB, isrB, LOW);
+}
+aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
+
+// ------------------------------------------------------------------
+// MAIN LOOP     MAIN LOOP     MAIN LOOP     MAIN LOOP     MAIN LOOP
+// ------------------------------------------------------------------
+void loop() {
+  // Tell the nRF8001 to do whatever it should be working on.
+  BTLEserial.pollACI();
+
+  // Ask what is our current status
+  aci_evt_opcode_t status = BTLEserial.getState();
+  // If the status changed....
+  if (status != laststatus) {
+    // print it out!
+    if (status == ACI_EVT_DEVICE_STARTED) {
+        Serial.println(F("* Advertising started"));
+    }
+    if (status == ACI_EVT_CONNECTED) {
+        Serial.println(F("* Connected!"));
+    }
+    if (status == ACI_EVT_DISCONNECTED) {
+        Serial.println(F("* Disconnected or advertising timed out"));
+    }
+    // OK set the last status change to this one
+    laststatus = status;
+  }
+
+  if (status == ACI_EVT_CONNECTED) {
+    // Lets see if there's any data for us!
+    if (BTLEserial.available()) {
+      Serial.print("* "); Serial.print(BTLEserial.available()); Serial.println(F(" bytes available from BTLE"));
+    }
+    // OK while we still have something to read, get a character and print it out
+    while (BTLEserial.available()) {
+      int c = BTLEserial.read();
+      Serial.print(c);
+      if (c == 0){
+        digitalWrite(LEDIndicator, HIGH);
+        delay(500);
+      }
+      else{
+        digitalWrite(LEDIndicator, LOW);
+      }
+    }
+  }
+  
+  if (digitalRead(Pin_button) == LOW){
+     virtualPosition = 0;
+     analogWrite(LEDPin_warning, 0);
+  }
+  if (virtualPosition > 150){
+    warning_output = virtualPosition /20;
+    analogWrite(LEDPin_warning, warning_output);
+  }
+  else{
+    analogWrite(LEDPin_warning, 0);
+  }
+  analogWrite(LEDPin_main, virtualPosition);
+  // If the current rotary switch position has changed then update everything
+  if (virtualPosition != lastCount) {
+    Serial.println(virtualPosition);
+    lastCount = virtualPosition ;
+  }
+}
