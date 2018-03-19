@@ -19,13 +19,19 @@ class TriggerThread(threading.Thread):
                     # TODO add '--loop' arg once BLE mat stop is enabled
                     subprocess.Popen(['omxplayer','--no-keys',  '--amp', '1000', 'outputs/sound/chiming-out_foolboymedia.mp3'])
                     # TODO placeholder for BLE communication with mat
-                    # TODO placeholder for BLE communication with panel
+                    
+                    #BLE communication with panel -- light on
+                    tcl_panel_conn.sh 0x4D
+
                 if DAY_NIGHT_ALARM.check_dusk_sim_alarm():
                     print "Evening alarm triggered"
                     LAMP_BULBS.evening_sequence()
                 if PANEL_STAY_AWAKE.check_time():
                     print "LED Panel alarm triggered"
-                    # TODO placeholder for BLE communication with panel
+                    
+                    #BLE communication with panel -- light on
+                    tcl_panel_conn.sh 0x4D
+                    
                     time.sleep(1)
                 # sleep for a while
                 print "Sleeping for twenty seconds..."

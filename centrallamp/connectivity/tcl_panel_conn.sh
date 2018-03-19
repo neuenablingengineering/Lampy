@@ -1,6 +1,7 @@
 #!/usr/bin/expect -f
 
 set prompt "#"
+set message [lindex $argv 0]
 
 spawn bluetoothctl
 expect $prompt
@@ -29,7 +30,7 @@ send -- "select-attribute /org/bluez/hci0/dev_C0_0F_3E_A9_48_2C/service0009/char
 expect $prompt
 
 #Currently sends an M
-send -- "write 0x4D\r"
+send -- "write $message\r"
 expect $prompt
 
 send -- "back\r"
