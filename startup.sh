@@ -2,12 +2,12 @@
 
 ##### 1.  
 #   Attempt to get system time from WWVB
-# TODO sh ./radio_set_time.sh &
+# TODO sh ./radio_set_time.sh 
 #       If successful 
 #           continue
 #       If not successful within TIMEOUT
 #           run fallback script
-sh ./fallback_set_time.sh &
+sh ./fallback_set_time.sh
 
 # 2. 
 # TODO flush serial? has to be done within Python
@@ -16,7 +16,7 @@ sh ./fallback_set_time.sh &
 sudo hciconfig hci0 up
 
 #4.    
-python __main__.py &
+python centrallamp/__main__.py
 
 # 4.5 listen for TURN_OFF signal (GPIO)
 #       TODO shutdown.py - will be the callback for the ON/OFF button
