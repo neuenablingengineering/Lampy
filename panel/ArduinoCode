@@ -1,5 +1,6 @@
 #include <pins_arduino.h>
 #include <SPI.h>
+#include <Adafruit_BLE_Firmata.h>
 #include "Adafruit_BLE_UART.h"
 
 // Connect CLK/MISO/MOSI to hardware SPI
@@ -8,7 +9,17 @@
 #define ADAFRUITBLE_RDY 2     // This should be an interrupt pin, on Uno thats #2 or #3
 #define ADAFRUITBLE_RST 9
 
+// Change this to whatever is the Serial console you want, either Serial or SerialUSB
+#define FIRMATADEBUG    Serial
+// Pause for Serial console before beginning?
+#define WAITFORSERIAL   false
+// Print all BLE interactions?
+#define VERBOSE_MODE    false
+// Pullups on all input pins?
+#define AUTO_INPUT_PULLUPS false
+
 Adafruit_BLE_UART BTLEserial = Adafruit_BLE_UART(ADAFRUITBLE_REQ, ADAFRUITBLE_RDY, ADAFRUITBLE_RST);
+
 
 /*==============================================================================
  * GLOBAL VARIABLES
@@ -24,7 +35,7 @@ const int Pin_button = 22;
 // Keep track of last rotary value
 int lastCount = 50;
 // Updated by the ISR (Interrupt Service Routine)
-volatile int virtualPosition = 0;
+volatile int virtualPosition = 50;
 
 //LEDs
 const int LEDPin_main = 3;
@@ -32,7 +43,13 @@ const int LEDPin_warning = 4;
 const int LEDIndicator = 5;
 
 int warning_output;
+int push_count = 0;
 
+//Dimming Value
+int faded_count = 5;
+boolean AUTO_Dim = false;
+
+int serial_input;
 
 // ------------------------------------------------------------------
 // INTERRUPT     INTERRUPT     INTERRUPT     INTERRUPT     INTERRUPT
@@ -54,7 +71,7 @@ void isrA ()  {
     }
 
     // Restrict value from 0 to +100
-    virtualPosition = min(250, max(0, virtualPosition));
+    virtualPosition = min(150, max(0, virtualPosition));
   }
 
   // Keep track of when we were here last (no more than every 5ms)
@@ -78,7 +95,7 @@ void isrB ()  {
     }
 
     // Restrict value from 0 to +100
-    virtualPosition = min(250, max(0, virtualPosition));
+    virtualPosition = min(150, max(0, virtualPosition));
   }
   // Keep track of when we were here last (no more than every 5ms)
   lastInterruptTime = interruptTime;
@@ -89,10 +106,7 @@ void isrB ()  {
 // ------------------------------------------------------------------
 void setup() {
   Serial.begin(9600);
-  while(!Serial); // Leonardo/Micro should wait for serial init
-  Serial.println(F("Adafruit Bluefruit Low Energy nRF8001 Print echo demo"));
-
-  // BTLEserial.setDeviceName("NEWNAME"); /* 7 characters max! */
+  //BTLEserial.setDeviceName("LIGHT PANEL"); /* 7 characters max! */
 
   BTLEserial.begin();
   
@@ -119,7 +133,7 @@ void loop() {
 
   // Ask what is our current status
   aci_evt_opcode_t status = BTLEserial.getState();
-  // If the status changed....
+  
   if (status != laststatus) {
     // print it out!
     if (status == ACI_EVT_DEVICE_STARTED) {
@@ -134,41 +148,94 @@ void loop() {
     // OK set the last status change to this one
     laststatus = status;
   }
-
+ 
   if (status == ACI_EVT_CONNECTED) {
-    // Lets see if there's any data for us!
-    if (BTLEserial.available()) {
-      Serial.print("* "); Serial.print(BTLEserial.available()); Serial.println(F(" bytes available from BTLE"));
-    }
     // OK while we still have something to read, get a character and print it out
     while (BTLEserial.available()) {
-      int c = BTLEserial.read();
-      Serial.print(c);
-      if (c == 0){
-        digitalWrite(LEDIndicator, HIGH);
-        delay(500);
+      serial_input = BTLEserial.read();
+      Serial.print(serial_input);
+      /*if (serial_input == 110){
+        virtualPosition = 10;
+        AUTO_Dim = true;
       }
-      else{
-        digitalWrite(LEDIndicator, LOW);
+      else if (serial_input == 102){
+        AUTO_Dim = false;
       }
+      */
     }
   }
-  
-  if (digitalRead(Pin_button) == LOW){
-     virtualPosition = 0;
-     analogWrite(LEDPin_warning, 0);
-  }
-  if (virtualPosition > 150){
-    warning_output = virtualPosition /20;
-    analogWrite(LEDPin_warning, warning_output);
-  }
-  else{
-    analogWrite(LEDPin_warning, 0);
-  }
-  analogWrite(LEDPin_main, virtualPosition);
-  // If the current rotary switch position has changed then update everything
-  if (virtualPosition != lastCount) {
-    Serial.println(virtualPosition);
-    lastCount = virtualPosition ;
+
+  switch (serial_input){
+    case 11111010:
+     if (virtualPosition < 150){
+        virtualPosition = virtualPosition + faded_count;
+        analogWrite(LEDPin_main, virtualPosition);
+        delay(300);
+     }
+      break;
+    case 11110210210:
+      digitalWrite(LEDIndicator, LOW);
+      analogWrite(LEDPin_main, 0);
+      break;
+    default:
+      if (digitalRead(Pin_button) == LOW){
+         virtualPosition = 10;
+         delay(300);
+         push_count = push_count + 1;
+      }
+      if ((push_count % 2) == 0){
+        virtualPosition = 0;
+        push_count = 0;
+      }
+      if (virtualPosition == 0){
+        push_count = 0;
+      }
+      
+      // If the current rotary switch position has changed then update everything
+      //Plan on deleteing this, just a display note
+      //---------------------------------//
+      if (virtualPosition != lastCount) {
+        lastCount = virtualPosition ;
+      }
+      //Serial.println(virtualPosition);
+      analogWrite(LEDPin_main, virtualPosition);
   }
 }
+
+/*
+
+  //Serial.println(AUTO_Dim);
+  
+  if (AUTO_Dim == true){
+    digitalWrite(LEDIndicator, HIGH);
+    analogWrite(LEDPin_main, virtualPosition);
+  }
+  else if (AUTO_Dim == false){
+    digitalWrite(LEDIndicator, LOW);
+  }
+
+  //Turning the LEDs on/off
+  //--------------------------------//
+  if (digitalRead(Pin_button) == LOW){
+     virtualPosition = 10;
+     delay(300);
+     push_count = push_count + 1;
+  }
+  if ((push_count % 2) == 0){
+    virtualPosition = 0;
+    push_count = 0;
+  }
+  if (virtualPosition == 0){
+    push_count = 0;
+  }
+  
+  // If the current rotary switch position has changed then update everything
+  //Plan on deleteing this, just a display note
+  //---------------------------------//
+  if (virtualPosition != lastCount) {
+    lastCount = virtualPosition ;
+  }
+  //Serial.println(virtualPosition);
+  analogWrite(LEDPin_main, virtualPosition);
+}
+*/
