@@ -4,6 +4,10 @@ import subprocess
 import threading
 
 class TriggerThread(threading.Thread):
+    isTriggeredMorning = False
+    isTriggeredNight = False
+    isTriggeredStayAwake = False
+
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -12,7 +16,8 @@ class TriggerThread(threading.Thread):
         # https://creativecommons.org/licenses/by-nc/3.0/
         while(True):
             if not DAY_NIGHT_ALARM.get_alarm_mode():
-                if DAY_NIGHT_ALARM.check_morning_alarm():
+                if (DAY_NIGHT_ALARM.check_morning_alarm() && !isTriggeredMorning):
+                    isTriggeredMorning = True
                     print "Morning alarm triggered"
                     LAMP_BULBS.morning_sequence()
                     # TODO stop the music from playing with BLE mat input
@@ -20,13 +25,21 @@ class TriggerThread(threading.Thread):
                     subprocess.Popen(['omxplayer','--no-keys',  '--amp', '1000', 'outputs/sound/chiming-out_foolboymedia.mp3'])
                     # TODO placeholder for BLE communication with mat
                     # TODO placeholder for BLE communication with panel
-                if DAY_NIGHT_ALARM.check_dusk_sim_alarm():
+                if !DAY_NIGHT_ALARM.check_morning_alarm():
+                    isTriggeredMorning = False
+                if (DAY_NIGHT_ALARM.check_dusk_sim_alarm() && !isTriggeredNight):
+                    isTriggeredNight = True
                     print "Evening alarm triggered"
                     LAMP_BULBS.evening_sequence()
-                if PANEL_STAY_AWAKE.check_time():
+                if !DAY_NIGHT_ALARM.check_dusk_sim_alarm():
+                    isTriggeredNight = False
+                if (PANEL_STAY_AWAKE.check_time() && !isTriggeredStayAwake):
+                    isTriggeredStayAwake = True
                     print "LED Panel alarm triggered"
                     # TODO placeholder for BLE communication with panel
                     time.sleep(1)
+                if !PANEL_STAY_AWAKE.check_time():
+                    isTriggeredStayAwake = False
                 # sleep for a while
                 print "Sleeping for twenty seconds..."
                 DAY_NIGHT_ALARM.print_both()
