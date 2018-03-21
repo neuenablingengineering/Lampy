@@ -22,7 +22,7 @@ class BulbControlThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        # bulbSwitch = Button()  #### Need to add GPIO pin for pullchain
+        bulbSwitch = Button(15)
         GPIO.add_event_detect(bulbSwitch.get_pin()
             , GPIO.BOTH
             , callback=callback_bulb
