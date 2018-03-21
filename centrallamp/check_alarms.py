@@ -3,6 +3,11 @@ import time
 import subprocess
 import threading
 from subprocess import call
+#from connectivity.find_pair_mat import mat_detected
+import os
+import pygatt
+import logging
+from binascii import hexlify
 
 class TriggerThread(threading.Thread):
     def __init__(self):
@@ -23,6 +28,31 @@ class TriggerThread(threading.Thread):
                     
                     #BLE communication with panel -- light on
                     subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
+                    #subprocess.Popen(['python', 'connectivity/alarm_with_hush.py'])
+    
+                    #time.sleep(15)
+                    MATTY_ADDR = "CC:5A:BC:A3:05:6F"
+                    ADDR_TYPE = pygatt.BLEAddressType.random
+                    time.sleep(5)
+
+                    mat_detected = 0
+                    while mat_detected != 1:
+                        #call the command and write to scan.txt file and then fill the process.
+                        #loop to find if the MAC address given is available
+                        os.system("hcitool lescan> scan.txt & pkill --signal SIGINT hcitool")
+                        scan = open("scan.txt","r")
+                        readscan = scan.read()
+                        if MATTY_ADDR in readscan:
+                            print "Matty detected!"
+                            mat_detected = 1
+                        else:
+                            print "Couldn't find Matty in range"
+                            time.sleep(1)
+
+
+                    if mat_detected == 1:
+                        subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4E'])
+                    
 
                 if DAY_NIGHT_ALARM.check_dusk_sim_alarm():
                     print "Evening alarm triggered"
