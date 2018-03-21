@@ -9,6 +9,7 @@ class DualBulb:
         self.nightBulb = Bulb(13, 80, 10, 0.1)
 
     def morning_sequence(self):
+        self.set_bulbs_on(0,0)
         self.dayBulb.transition_on()
 
     def evening_sequence(self):
@@ -26,3 +27,11 @@ class DualBulb:
         # set the bulbs to OFF mode
         self.dayBulb.turn_off()
         self.nightBulb.turn_off()
+
+    def set_bulbs_on(self, morningDuty, nightDuty):
+        # set the duty cycles for morning and night bulbs, then turn on
+        self.dayBulb.set_on(morningDuty)
+        self.nightBulb.set_on(nightDuty)
+
+    def check_bulb_status(self):
+        return (self.dayBulb.check_status() or self.nightBulb.check_status())
