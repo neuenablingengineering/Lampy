@@ -2,6 +2,7 @@ from global_config import *
 from time_display import *
 from set_alarm import *
 from check_alarms import TriggerThread
+from bulb_control import BulbControlThread
 from multiprocessing import Process
 
 def main():
@@ -11,6 +12,8 @@ def main():
     setAlarmThread.start()
     triggerThread = TriggerThread()
     triggerThread.start()
+    bulbControlThread = BulbControlThread()
+    bulbControlThread.start()
             
     
 
