@@ -24,12 +24,14 @@ class Bulb:
         self.isOn = False
 
     def transition_on(self):
+        # gradually transition bulb from OFF to ON
         for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(x)
             self.dutyCycle = x
             time.sleep(self.transitionSleepOn)
 
     def transition_off(self):
+        # gradualy transition bulb from ON to OFF
         for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(self.maxDutyCycle - x)
             self.dutyCycle = (self.maxDutyCycle - x)
@@ -56,6 +58,6 @@ class Bulb:
         self.pwm.ChangeDutyCycle(dutyCycle)
         self.dutyCycle = dutyCycle
 
-    # check current On/Off status
+    # check current ON/OFF status
     def check_status(self):
         return self.isOn

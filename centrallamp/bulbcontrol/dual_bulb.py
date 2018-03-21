@@ -34,4 +34,5 @@ class DualBulb:
         self.nightBulb.set_on(nightDuty)
 
     def check_bulb_status(self):
+        # returns true if any bulbs are on, false otherwise
         return (self.dayBulb.check_status() or self.nightBulb.check_status())
