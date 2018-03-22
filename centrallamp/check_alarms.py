@@ -21,10 +21,9 @@ class TriggerThread(threading.Thread):
                 if DAY_NIGHT_ALARM.check_morning_alarm():
                     print "Morning alarm triggered"
                     LAMP_BULBS.morning_sequence()
-                    # TODO stop the music from playing with BLE mat input
-                    # TODO add '--loop' arg once BLE mat stop is enabled
-                    subprocess.Popen(['omxplayer','--no-keys',  '--amp', '1000', 'outputs/sound/chiming-out_foolboymedia.mp3'])
-                    # TODO placeholder for BLE communication with mat
+                    
+                    soundSubProc = subprocess.Popen(['omxplayer','--no-keys'
+                        , '--amp', '--loop', '1000', 'outputs/sound/chiming-out_foolboymedia.mp3'])
                     
                     #BLE communication with panel -- light on
                     subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
@@ -52,6 +51,7 @@ class TriggerThread(threading.Thread):
 
                     if mat_detected == 1:
                         subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4E'])
+                        soundSubProc.kill()
                     
 
                 if DAY_NIGHT_ALARM.check_dusk_sim_alarm():
