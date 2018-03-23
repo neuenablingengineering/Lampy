@@ -23,7 +23,7 @@ class DualBulb:
         self.dayBulb.turn_on()
         self.nightBulb.turn_on()
 
-    def turn_off(self)
+    def turn_off(self):
         # set the bulbs to OFF mode
         self.dayBulb.turn_off()
         self.nightBulb.turn_off()
