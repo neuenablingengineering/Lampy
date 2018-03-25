@@ -16,9 +16,8 @@ class ShutdownThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        #shutdownButton = Button() ### Need to add GPIO pin for shutdown button
-
+        shutdownButton = Button() ### Need to add GPIO pin for shutdown button
         GPIO.add_event_detect(shutdownButton.get_pin()
-            , GPIO.BOTH
-            , callback = shutdown
-            , bouncetime = 750)
+           , GPIO.BOTH
+           , callback = shutdown
+           , bouncetime = 750)
