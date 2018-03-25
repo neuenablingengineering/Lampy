@@ -6,14 +6,19 @@ from multiprocessing import Process
 from shutdown import ShutdownThread
 
 def main():
-    timeProc = Process(target = time_display)
-    timeProc.start()
-    setAlarmThread = SetAlarmThread()
-    setAlarmThread.start()
-    triggerThread = TriggerThread()
-    triggerThread.start()
-    shutdownThread = ShutdownThread()
-    shutdownThread.start()            
+    try:
+        timeProc = Process(target = time_display)
+        timeProc.start()
+        setAlarmThread = SetAlarmThread()
+        setAlarmThread.start()
+        triggerThread = TriggerThread()
+        triggerThread.start()
+        # shutdownThread = ShutdownThread()
+        # shutdownThread.start()    
+
+    except KeyboardInterrupt:
+        print "Cleaning up...\n"
+        GPIO.cleanup()        
             
     
 if __name__ == "__main__":
