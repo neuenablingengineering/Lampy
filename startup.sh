@@ -1,12 +1,10 @@
 #!/bin/bash
 
-echo "Setting time"
-sudo sh /home/cap/Lampy/set_time.sh
-
 echo "hciconfig"
 hciconfig hci0 up
 
-echo "starting"
+echo "Setting time"
+sudo sh /home/cap/Lampy/set_time.sh
+
+echo "Starting main"
 python /home/cap/Lampy/centrallamp/__main__.py
-
-
