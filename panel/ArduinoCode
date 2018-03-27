@@ -1,0 +1,241 @@
+#include <pins_arduino.h>
+#include <SPI.h>
+#include <Adafruit_BLE_Firmata.h>
+#include "Adafruit_BLE_UART.h"
+
+// Connect CLK/MISO/MOSI to hardware SPI
+// e.g. On UNO & compatible: CLK = 13, MISO = 12, MOSI = 11
+#define ADAFRUITBLE_REQ 10
+#define ADAFRUITBLE_RDY 2     // This should be an interrupt pin, on Uno thats #2 or #3
+#define ADAFRUITBLE_RST 9
+
+// Change this to whatever is the Serial console you want, either Serial or SerialUSB
+#define FIRMATADEBUG    Serial
+// Pause for Serial console before beginning?
+#define WAITFORSERIAL   false
+// Print all BLE interactions?
+#define VERBOSE_MODE    false
+// Pullups on all input pins?
+#define AUTO_INPUT_PULLUPS false
+
+Adafruit_BLE_UART BTLEserial = Adafruit_BLE_UART(ADAFRUITBLE_REQ, ADAFRUITBLE_RDY, ADAFRUITBLE_RST);
+
+
+/*==============================================================================
+ * GLOBAL VARIABLES
+ *============================================================================*/
+
+// Used for generating interrupts using CLK signal
+const int PinA = 21;
+// Used for reading DT signal
+const int PinB = 20;
+//Used for reading push button
+const int Pin_button = 22;
+
+// Keep track of last rotary value
+int lastCount = 50;
+// Updated by the ISR (Interrupt Service Routine)
+volatile int virtualPosition = 50;
+
+//LEDs
+const int LEDPin_main = 3;
+const int LEDPin_warning = 4;
+const int LEDIndicator = 5;
+
+int warning_output;
+int push_count = 0;
+
+//Dimming Value
+int faded_count = 5;
+boolean AUTO_Dim = false;
+
+int serial_input;
+
+// ------------------------------------------------------------------
+// INTERRUPT     INTERRUPT     INTERRUPT     INTERRUPT     INTERRUPT
+// ------------------------------------------------------------------
+void isrA ()  {
+  static unsigned long lastInterruptTime = 0;
+  unsigned long interruptTime = millis();
+
+  // If interrupts come faster than 5ms, assume it's a bounce and ignore
+  if (interruptTime - lastInterruptTime > 5) {
+
+    byte pinB = digitalRead(PinB);
+    if (pinB == 1)
+    {
+      virtualPosition++ ; // Could be -5 or -10
+    }
+    else {
+      virtualPosition-- ; // Could be +5 or +10
+    }
+
+    // Restrict value from 0 to +100
+    virtualPosition = min(150, max(0, virtualPosition));
+  }
+
+  // Keep track of when we were here last (no more than every 5ms)
+  lastInterruptTime = interruptTime;
+}
+
+void isrB ()  {
+  static unsigned long lastInterruptTime = 0;
+  unsigned long interruptTime = millis();
+
+  // If interrupts come faster than 5ms, assume it's a bounce and ignore
+  if (interruptTime - lastInterruptTime > 5) {
+
+    byte pinA = digitalRead(PinA);
+    if (pinA == 0)
+    {
+      virtualPosition++ ; // Could be -5 or -10
+    }
+    else{
+      virtualPosition-- ; // Could be +5 or +10
+    }
+
+    // Restrict value from 0 to +100
+    virtualPosition = min(150, max(0, virtualPosition));
+  }
+  // Keep track of when we were here last (no more than every 5ms)
+  lastInterruptTime = interruptTime;
+}
+
+// ------------------------------------------------------------------
+// SETUP    SETUP    SETUP    SETUP    SETUP    SETUP    SETUP
+// ------------------------------------------------------------------
+void setup() {
+  Serial.begin(9600);
+  //BTLEserial.setDeviceName("LIGHT PANEL"); /* 7 characters max! */
+
+  BTLEserial.begin();
+  
+  // Rotary pulses are INPUTs
+  pinMode(PinA, INPUT_PULLUP);
+  pinMode(PinB, INPUT_PULLUP);
+  pinMode(Pin_button, INPUT_PULLUP);
+  pinMode(LEDPin_main, OUTPUT);
+  pinMode(LEDPin_warning, OUTPUT);
+  pinMode(LEDIndicator, OUTPUT);
+
+  // Attach the routine to service the interrupts
+  attachInterrupt(PinA, isrA, LOW);
+  attachInterrupt(PinB, isrB, LOW);
+}
+aci_evt_opcode_t laststatus = ACI_EVT_DISCONNECTED;
+
+// ------------------------------------------------------------------
+// MAIN LOOP     MAIN LOOP     MAIN LOOP     MAIN LOOP     MAIN LOOP
+// ------------------------------------------------------------------
+void loop() {
+  // Tell the nRF8001 to do whatever it should be working on.
+  BTLEserial.pollACI();
+
+  // Ask what is our current status
+  aci_evt_opcode_t status = BTLEserial.getState();
+  
+  if (status != laststatus) {
+    // print it out!
+    if (status == ACI_EVT_DEVICE_STARTED) {
+        Serial.println(F("* Advertising started"));
+    }
+    if (status == ACI_EVT_CONNECTED) {
+        Serial.println(F("* Connected!"));
+    }
+    if (status == ACI_EVT_DISCONNECTED) {
+        Serial.println(F("* Disconnected or advertising timed out"));
+    }
+    // OK set the last status change to this one
+    laststatus = status;
+  }
+ 
+  if (status == ACI_EVT_CONNECTED) {
+    // OK while we still have something to read, get a character and print it out
+    while (BTLEserial.available()) {
+      serial_input = BTLEserial.read();
+      Serial.print(serial_input);
+      /*if (serial_input == 110){
+        virtualPosition = 10;
+        AUTO_Dim = true;
+      }
+      else if (serial_input == 102){
+        AUTO_Dim = false;
+      }
+      */
+    }
+  }
+
+  switch (serial_input){
+    case 11111010:
+     if (virtualPosition < 150){
+        virtualPosition = virtualPosition + faded_count;
+        analogWrite(LEDPin_main, virtualPosition);
+        delay(300);
+     }
+      break;
+    case 11110210210:
+      digitalWrite(LEDIndicator, LOW);
+      analogWrite(LEDPin_main, 0);
+      break;
+    default:
+      if (digitalRead(Pin_button) == LOW){
+         virtualPosition = 10;
+         delay(300);
+         push_count = push_count + 1;
+      }
+      if ((push_count % 2) == 0){
+        virtualPosition = 0;
+        push_count = 0;
+      }
+      if (virtualPosition == 0){
+        push_count = 0;
+      }
+      
+      // If the current rotary switch position has changed then update everything
+      //Plan on deleteing this, just a display note
+      //---------------------------------//
+      if (virtualPosition != lastCount) {
+        lastCount = virtualPosition ;
+      }
+      //Serial.println(virtualPosition);
+      analogWrite(LEDPin_main, virtualPosition);
+  }
+}
+
+/*
+
+  //Serial.println(AUTO_Dim);
+  
+  if (AUTO_Dim == true){
+    digitalWrite(LEDIndicator, HIGH);
+    analogWrite(LEDPin_main, virtualPosition);
+  }
+  else if (AUTO_Dim == false){
+    digitalWrite(LEDIndicator, LOW);
+  }
+
+  //Turning the LEDs on/off
+  //--------------------------------//
+  if (digitalRead(Pin_button) == LOW){
+     virtualPosition = 10;
+     delay(300);
+     push_count = push_count + 1;
+  }
+  if ((push_count % 2) == 0){
+    virtualPosition = 0;
+    push_count = 0;
+  }
+  if (virtualPosition == 0){
+    push_count = 0;
+  }
+  
+  // If the current rotary switch position has changed then update everything
+  //Plan on deleteing this, just a display note
+  //---------------------------------//
+  if (virtualPosition != lastCount) {
+    lastCount = virtualPosition ;
+  }
+  //Serial.println(virtualPosition);
+  analogWrite(LEDPin_main, virtualPosition);
+}
+*/
