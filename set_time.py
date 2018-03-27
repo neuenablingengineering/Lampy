@@ -1,5 +1,5 @@
-from inputs.button import *
-from outputs.lcd.display_message import LCDDisplay
+from centrallamp.inputs.button import *
+from centrallamp.outputs.lcd.display_message import LCDDisplay
 import RPi.GPIO as GPIO
 import time
 

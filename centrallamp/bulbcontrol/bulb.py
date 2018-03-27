@@ -16,6 +16,7 @@ class Bulb:
         self.maxDutyCycle = maxDutyCycle
         self.transitionSleepOn = transitionSleepOn
         self.transitionSleepOff = transitionSleepOff
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.pinNum,GPIO.OUT)
         self.pwm = GPIO.PWM(self.pinNum,Bulb.FREQUENCY)
