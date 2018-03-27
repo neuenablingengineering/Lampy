@@ -10,6 +10,10 @@ import logging
 from binascii import hexlify
 
 class TriggerThread(threading.Thread):
+    isTriggeredMorning = False
+    isTriggeredNight = False
+    isTriggeredStayAwake = False
+
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -18,10 +22,10 @@ class TriggerThread(threading.Thread):
         # https://creativecommons.org/licenses/by-nc/3.0/
         while(True):
             if not DAY_NIGHT_ALARM.get_alarm_mode():
-                if DAY_NIGHT_ALARM.check_morning_alarm():
+                if (DAY_NIGHT_ALARM.check_morning_alarm() and not isTriggeredMorning):
+                    isTriggeredMorning = True
                     print "Morning alarm triggered"
                     LAMP_BULBS.morning_sequence()
-                    
                     soundSubProc = subprocess.Popen(['omxplayer','--no-keys'
                         , '--amp', '1000', '--loop', 'outputs/sound/chiming-out_foolboymedia.mp3'])
                     
@@ -54,18 +58,25 @@ class TriggerThread(threading.Thread):
                         print "attempt to kill subproc"
                         #soundSubProc.terminate()
                         subprocess.call(["pkill", "omx"])
-                    
-
-                if DAY_NIGHT_ALARM.check_dusk_sim_alarm():
+                        
+                if not DAY_NIGHT_ALARM.check_morning_alarm():
+                    isTriggeredMorning = False
+                if (DAY_NIGHT_ALARM.check_dusk_sim_alarm() and not isTriggeredNight):
+                    isTriggeredNight = True
                     print "Evening alarm triggered"
                     LAMP_BULBS.evening_sequence()
-                if PANEL_STAY_AWAKE.check_time():
+                if not DAY_NIGHT_ALARM.check_dusk_sim_alarm():
+                    isTriggeredNight = False
+                if (PANEL_STAY_AWAKE.check_time() and not isTriggeredStayAwake):
+                    isTriggeredStayAwake = True
                     print "LED Panel alarm triggered"
                     
                     #BLE communication with panel -- light on
                     subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
                     
                     time.sleep(1)
+                if not PANEL_STAY_AWAKE.check_time():
+                    isTriggeredStayAwake = False
                 # sleep for a while
                 print "Sleeping for twenty seconds..."
                 DAY_NIGHT_ALARM.print_both()
