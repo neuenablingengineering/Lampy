@@ -23,7 +23,7 @@ class TriggerThread(threading.Thread):
                     LAMP_BULBS.morning_sequence()
                     
                     soundSubProc = subprocess.Popen(['omxplayer','--no-keys'
-                        , '--amp', '--loop', '1000', 'outputs/sound/chiming-out_foolboymedia.mp3'])
+                        , '--amp', '1000', '--loop', 'outputs/sound/chiming-out_foolboymedia.mp3'])
                     
                     #BLE communication with panel -- light on
                     subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
@@ -51,7 +51,9 @@ class TriggerThread(threading.Thread):
 
                     if mat_detected == 1:
                         subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4E'])
-                        soundSubProc.kill()
+                        print "attempt to kill subproc"
+                        #soundSubProc.terminate()
+                        subprocess.call(["pkill", "omx"])
                     
 
                 if DAY_NIGHT_ALARM.check_dusk_sim_alarm():
