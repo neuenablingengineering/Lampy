@@ -31,9 +31,7 @@ class TriggerThread(threading.Thread):
                     
                     #BLE communication with panel -- light on
                     subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
-                    #subprocess.Popen(['python', 'connectivity/alarm_with_hush.py'])
     
-                    #time.sleep(15)
                     MATTY_ADDR = "CC:5A:BC:A3:05:6F"
                     ADDR_TYPE = pygatt.BLEAddressType.random
                     time.sleep(5)
@@ -56,7 +54,6 @@ class TriggerThread(threading.Thread):
                     if mat_detected == 1:
                         subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4E'])
                         print "attempt to kill subproc"
-                        #soundSubProc.terminate()
                         subprocess.call(["pkill", "omx"])
                         
                 if not DAY_NIGHT_ALARM.check_morning_alarm():
