@@ -20,20 +20,45 @@ class Bulb:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.pinNum,GPIO.OUT)
         self.pwm = GPIO.PWM(self.pinNum,Bulb.FREQUENCY)
-        self.pwm.start(0)
+        self.pwm.stop()
+        self.dutyCycle = 80
+        self.isOn = False
 
     def transition_on(self):
+        # gradually transition bulb from OFF to ON
         for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(x)
+            self.dutyCycle = x
             time.sleep(self.transitionSleepOn)
 
     def transition_off(self):
+        # gradualy transition bulb from ON to OFF
         for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(self.maxDutyCycle - x)
+            self.dutyCycle = (self.maxDutyCycle - x)
             time.sleep(self.transitionSleepOff)
 
+    # stop PWM
     def turn_off(self):
         self.pwm.stop()
+        self.isOn = False
 
+    # start PWM at current self.dutyCycle level
+    def turn_on(self):
+        self.pwm.start(self.dutyCycle)
+        self.isOn = True
+
+    # start PWM at a particular duty cycle
+    def set_on(self, newCycle):
+        self.pwm.start(newCycle)
+        self.dutyCycle = newCycle
+        self.isOn = True
+
+    # change the currently set duty cycle
     def change_duty_cycle(self, dutyCycle):
         self.pwm.ChangeDutyCycle(dutyCycle)
+        self.dutyCycle = dutyCycle
+
+    # check current ON/OFF status
+    def check_status(self):
+        return self.isOn
