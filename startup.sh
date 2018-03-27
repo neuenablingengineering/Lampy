@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Setting time"
-sudo sh /home/cap/Lampy/fallback_set_time.sh
+sudo sh /home/cap/Lampy/set_time.sh
 
 echo "hciconfig"
 hciconfig hci0 up
