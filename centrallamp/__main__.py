@@ -13,8 +13,8 @@ def main():
         setAlarmThread.start()
         triggerThread = TriggerThread()
         triggerThread.start()
-        # shutdownThread = ShutdownThread()
-        # shutdownThread.start()    
+        shutdownThread = ShutdownThread()
+        shutdownThread.start()    
 
     except KeyboardInterrupt:
         print "Cleaning up...\n"
