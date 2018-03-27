@@ -7,7 +7,7 @@ import os
 
 def shutdown(channel):
     print("Shutdown should be called")
-    LCD-write_msg_to_screen("  ")
+    LCD.write_msg_to_screen("  ")
     GPIO.cleanup()
     os.system("shutdown now -h")
 
@@ -16,7 +16,7 @@ class ShutdownThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        shutdownButton = Button() ### Need to add GPIO pin for shutdown button
+        shutdownButton = Button(19) 
         GPIO.add_event_detect(shutdownButton.get_pin()
            , GPIO.BOTH
            , callback = shutdown
