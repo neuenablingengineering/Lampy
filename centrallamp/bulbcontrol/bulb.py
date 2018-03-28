@@ -40,14 +40,14 @@ class Bulb:
 
     def demo_transition_on(self):
         # a shorter transition on for short capstone demo
-        for x in range(self.maxDutyCycle(x):
+        for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(x)
             self.dutyCycle = x
             time.sleep(.1)
 
     def demo_transition_off(self):
         # a shorter transition off for short capstone demo
-        for x in range(self.maxDutyCycle(x):
+        for x in range(self.maxDutyCycle):
             self.pwm.ChangeDutyCycle(self.maxDutyCycle - x)
             self.dutyCycle = (self.maxDutyCycle - x)
             time.sleep(.1)
