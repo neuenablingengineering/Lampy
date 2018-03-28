@@ -10,19 +10,19 @@ import logging
 from binascii import hexlify
 
 class TriggerThread(threading.Thread):
-    isTriggeredMorning = False
-    isTriggeredNight = False
-    isTriggeredStayAwake = False
-
     def __init__(self):
         threading.Thread.__init__(self)
+        self.isTriggeredMorning = False
+        self.isTriggeredNight = False
+        self.isTriggeredStayAwake = False
+
     def run(self):
         # Alarm sound courtesy FoolBoyMedia (c) Creative Commons Attribution Non-Commercial 3.0 License
         # https://freesound.org/people/FoolBoyMedia/sounds/246390/
         # https://creativecommons.org/licenses/by-nc/3.0/
         while(True):
             if not DAY_NIGHT_ALARM.get_alarm_mode():
-                if (DAY_NIGHT_ALARM.check_morning_alarm() and not isTriggeredMorning):
+                if (DAY_NIGHT_ALARM.check_morning_alarm() and not self.isTriggeredMorning):
                     isTriggeredMorning = True
                     print "Morning alarm triggered"
                     LAMP_BULBS.morning_sequence()
@@ -55,17 +55,18 @@ class TriggerThread(threading.Thread):
                         subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4E'])
                         print "attempt to kill subproc"
                         subprocess.call(["pkill", "omx"])
+                        self.isTriggeredMorning = False
+
                         
-                if not DAY_NIGHT_ALARM.check_morning_alarm():
-                    isTriggeredMorning = False
-                if (DAY_NIGHT_ALARM.check_dusk_sim_alarm() and not isTriggeredNight):
-                    isTriggeredNight = True
+                #if not DAY_NIGHT_ALARM.check_morning_alarm():
+                if (DAY_NIGHT_ALARM.check_dusk_sim_alarm() and not self.isTriggeredNight):
+                    self.isTriggeredNight = True
                     print "Evening alarm triggered"
                     LAMP_BULBS.evening_sequence()
                 if not DAY_NIGHT_ALARM.check_dusk_sim_alarm():
-                    isTriggeredNight = False
-                if (PANEL_STAY_AWAKE.check_time() and not isTriggeredStayAwake):
-                    isTriggeredStayAwake = True
+                    self.isTriggeredNight = False
+                if (PANEL_STAY_AWAKE.check_time() and not self.isTriggeredStayAwake):
+                    self.isTriggeredStayAwake = True
                     print "LED Panel alarm triggered"
                     
                     #BLE communication with panel -- light on
@@ -73,7 +74,7 @@ class TriggerThread(threading.Thread):
                     
                     time.sleep(1)
                 if not PANEL_STAY_AWAKE.check_time():
-                    isTriggeredStayAwake = False
+                    self.isTriggeredStayAwake = False
                 # sleep for a while
                 print "Sleeping for twenty seconds..."
                 DAY_NIGHT_ALARM.print_both()
