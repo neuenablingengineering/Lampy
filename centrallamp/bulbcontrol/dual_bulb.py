@@ -22,7 +22,7 @@ class DualBulb:
         self.set_bulbs_on(0,0)
         self.dayBulb.demo_transition_on()
 
-    def demo_afternoon(self):
+    def demo_evening(self):
         for x in range(self.maxDutyCycle):
             self.dayBulb.change_duty_cycle(self.maxDutyCycle - x)
             self.nightBulb.change_duty_cycle(x)

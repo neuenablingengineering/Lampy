@@ -21,7 +21,7 @@ class TriggerThread(threading.Thread):
                 if (DAY_NIGHT_ALARM.check_morning_alarm() and not self.isTriggeredMorning):
                     isTriggeredMorning = True
                     print "Morning alarm triggered"
-                    LAMP_BULBS.morning_sequence()
+                    LAMP_BULBS.demo_morning()
                     soundSubProc = subprocess.Popen(['omxplayer','--no-keys'
                         , '--amp', '1000', '--loop', 'outputs/sound/chiming-out_foolboymedia.mp3'])
                     
@@ -57,7 +57,7 @@ class TriggerThread(threading.Thread):
                 if (DAY_NIGHT_ALARM.check_dusk_sim_alarm() and not self.isTriggeredNight):
                     self.isTriggeredNight = True
                     print "Evening alarm triggered"
-                    LAMP_BULBS.evening_sequence()
+                    LAMP_BULBS.demo_evening()
                 if not DAY_NIGHT_ALARM.check_dusk_sim_alarm():
                     self.isTriggeredNight = False
                 if (PANEL_STAY_AWAKE.check_time() and not self.isTriggeredStayAwake):
