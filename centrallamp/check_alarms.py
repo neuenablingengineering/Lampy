@@ -4,7 +4,6 @@ import subprocess
 import threading
 import os
 import pygatt
-from binascii import hexlify
 
 class TriggerThread(threading.Thread):
     def __init__(self):
