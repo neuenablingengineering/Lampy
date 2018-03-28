@@ -2,11 +2,8 @@ from global_config import *
 import time
 import subprocess
 import threading
-from subprocess import call
-#from connectivity.find_pair_mat import mat_detected
 import os
 import pygatt
-import logging
 from binascii import hexlify
 
 class TriggerThread(threading.Thread):
@@ -58,7 +55,6 @@ class TriggerThread(threading.Thread):
                         self.isTriggeredMorning = False
 
                         
-                #if not DAY_NIGHT_ALARM.check_morning_alarm():
                 if (DAY_NIGHT_ALARM.check_dusk_sim_alarm() and not self.isTriggeredNight):
                     self.isTriggeredNight = True
                     print "Evening alarm triggered"
