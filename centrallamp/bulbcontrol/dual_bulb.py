@@ -7,8 +7,8 @@ class DualBulb:
         self.maxDutyCycle = maxDutyCycle
         self.dayBulb = Bulb(12, 80, 0.1, 10)
         self.nightBulb = Bulb(13, 80, 10, 0.1)
-        self.dayBulb.changeDutyCycle(80)
-        self.nightBulb.changeDutyCycle(0)
+        self.dayBulb.change_duty_cycle(80)
+        self.nightBulb.change_duty_cycle(0)
 
     def morning_sequence(self):
         self.set_bulbs_on(0,0)
