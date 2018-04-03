@@ -71,7 +71,7 @@ class TriggerThread(threading.Thread):
                 if not PANEL_STAY_AWAKE.check_time():
                     self.isTriggeredStayAwake = False
                 # sleep for a while
-                print "Sleeping for twenty seconds..."
+                print "Sleeping for five seconds..."
                 DAY_NIGHT_ALARM.print_both()
-                time.sleep(20)
+                time.sleep(5)
      

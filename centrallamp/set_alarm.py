@@ -42,6 +42,8 @@ def callback_min(channel):
         # When not in Set Alarm Mode, pressing MINUTE button will set alarm to current time
         now = datetime.datetime.now()
         DAY_NIGHT_ALARM.set_morning_dusk_sim_alarms(now.hour, now.minute)
+        print "Updating alarm!"
+        DAY_NIGHT_ALARM.print_both()
 
 class SetAlarmThread(threading.Thread):
     def __init__(self):
