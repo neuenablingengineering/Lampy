@@ -15,7 +15,7 @@ Naming conventions for the Repo:
 DEMO BRANCH: 
 
 This branch runs a brief demo of Lampy's basic functionality.
-Alarms are triggered as usual, but the behavior of the 'HOUR'
+Alarms are triggered as usual, but the behavior of the 'MINUTE'
 button outside of SET ALARM MODE has been overwritten to update
 the morning alarm time to the current clock time. The evening
 alarm has likewise been set to one minute after the morning alarm
