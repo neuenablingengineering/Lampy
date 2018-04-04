@@ -20,20 +20,19 @@ class TriggerThread(threading.Thread):
             if not DAY_NIGHT_ALARM.get_alarm_mode():
                 if (DAY_NIGHT_ALARM.check_morning_alarm() and not self.isTriggeredMorning):
                     isTriggeredMorning = True
+                     
                     print "Morning alarm triggered"
-                    th = threading.THREAD(target = LAMP_BULBS.morning_sequence())
-                    th.start()
-                    
                     #BLE communication with panel -- light on
                     subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
    
+                    th = threading.Thread(target = LAMP_BULBS.morning_sequence())
+                    th.start()
+                    
                     MATTY_ADDR = "CC:5A:BC:A3:05:6F"
                     ADDR_TYPE = pygatt.BLEAddressType.random
-                    time.sleep(5)
-
+                    #time.sleep(5)
                     soundSubProc = subprocess.Popen(['omxplayer','--no-keys'
                         , '--amp', '1000', '--loop', 'outputs/sound/chiming-out_foolboymedia.mp3'])
-
 
                     mat_detected = 0
                     while mat_detected != 1:

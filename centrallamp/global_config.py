@@ -6,5 +6,5 @@ from bulbcontrol.dual_bulb import DualBulb
 LCD = LCDDisplay()
 DAY_NIGHT_ALARM = DualAlarm()
 PANEL_STAY_AWAKE = Alarm()
-LAMP_BULBS = DualBulb(80)
+LAMP_BULBS = DualBulb(100)
 
