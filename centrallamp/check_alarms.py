@@ -20,23 +20,26 @@ class TriggerThread(threading.Thread):
             if not DAY_NIGHT_ALARM.get_alarm_mode():
                 if (DAY_NIGHT_ALARM.check_morning_alarm() and not self.isTriggeredMorning):
                     isTriggeredMorning = True
+                     
                     print "Morning alarm triggered"
-                    LAMP_BULBS.demo_morning()
-                    soundSubProc = subprocess.Popen(['omxplayer','--no-keys'
-                        , '--amp', '1000', '--loop', 'outputs/sound/chiming-out_foolboymedia.mp3'])
-                    
+
                     #BLE communication with panel -- light on
                     subprocess.Popen(['expect', 'connectivity/tcl_panel_conn.sh', '0x4D'])
-    
-                    MATTY_ADDR = "CC:5A:BC:A3:05:6F"
+   
+                    th = threading.Thread(target = LAMP_BULBS.demo_morning())
+                    th.start()
+                    
+                    MATTY_ADDR = "98:D3:35:70:F3:C3"
                     ADDR_TYPE = pygatt.BLEAddressType.random
-                    time.sleep(5)
+                    #time.sleep(5)
+                    soundSubProc = subprocess.Popen(['omxplayer','--no-keys'
+                        , '--amp', '1000', '--loop', 'outputs/sound/chiming-out_foolboymedia.mp3'])
 
                     mat_detected = 0
                     while mat_detected != 1:
                         #call the command and write to scan.txt file and then fill the process.
                         #loop to find if the MAC address given is available
-                        os.system("hcitool lescan> scan.txt & pkill --signal SIGINT hcitool")
+                        os.system("hcitool scan> scan.txt & pkill --signal SIGINT hcitool")
                         scan = open("scan.txt","r")
                         readscan = scan.read()
                         if MATTY_ADDR in readscan:
