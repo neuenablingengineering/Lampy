@@ -50,3 +50,7 @@ class Alarm:
         self.minute += 1
         if self.minute > 59:
             self.minute = 0
+
+    # get the minute for demo testing purposes
+    def get_min(self):
+        return self.minute

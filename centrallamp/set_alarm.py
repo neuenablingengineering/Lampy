@@ -7,6 +7,7 @@ import RPi.GPIO as GPIO
 from inputs.button import Button
 import threading
 import time
+import datetime
 
 global TOGGLE_FLAG
 global DAY_NIGHT_ALARM
@@ -36,6 +37,13 @@ def callback_min(channel):
     if (TOGGLE_FLAG):
         print "min increment"
         DAY_NIGHT_ALARM.increment_both_min()
+    else:
+        # FOR DEMO PURPOSES ONLY
+        # When not in Set Alarm Mode, pressing MINUTE button will set alarm to current time
+        now = datetime.datetime.now()
+        DAY_NIGHT_ALARM.set_morning_dusk_sim_alarms(now.hour, now.minute)
+        print "Updating alarm!"
+        DAY_NIGHT_ALARM.print_both()
 
 class SetAlarmThread(threading.Thread):
     def __init__(self):

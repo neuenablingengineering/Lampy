@@ -7,7 +7,7 @@ timedatectl set-ntp 0
 
 if [ "$1" == "m" ]
 then
-	echo "Please enter dates in mm/dd/yyyy or hh/mm format when prompted."
+	echo "Please enter dates in mm/dd or hh/mm format when prompted."
 	read -p 'Hour: ' hour
 	read -p 'Minute: ' minute
 	read -p 'Numerical Month: ' month
