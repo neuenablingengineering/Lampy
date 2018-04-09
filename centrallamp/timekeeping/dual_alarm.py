@@ -10,7 +10,7 @@ class DualAlarm:
     def __init__(self, hour=HOUR, minute=MINUTE):
         self.morningAlarm = Alarm(hour%24,minute%60)
         self.duskAlarm = Alarm(hour%24, (minute+MIN_OFFSET)%60)
-        if (0 == self.duskAlarm.get_min()%60):
+        if ((0 == self.duskAlarm.get_min()%60) or (1 == self.duskAlarm.get_min()%60)):
             self.duskAlarm.inc_hour()
         self.setAlarmMode = False
 
