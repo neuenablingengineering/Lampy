@@ -8,5 +8,5 @@ GPIO.setmode(GPIO.BOARD)
 LCD = LCDDisplay()
 DAY_NIGHT_ALARM = DualAlarm()
 PANEL_STAY_AWAKE = Alarm()
-LAMP_BULBS = DualBulb(80)
+LAMP_BULBS = DualBulb(100)
 
