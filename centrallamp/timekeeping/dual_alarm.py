@@ -2,7 +2,7 @@ from alarm import Alarm
 HOUR = 8
 MINUTE = 30
 OFFSET = 9
-MIN_OFFSET = 1
+MIN_OFFSET = 2
 
 class DualAlarm:
     # Initiate DualAlarm with a morning and dusk simulation alarm
@@ -19,6 +19,8 @@ class DualAlarm:
     def set_morning_dusk_sim_alarms(self, hour, minute):
         self.morningAlarm.set_alarm(hour%24,minute%60)
         self.duskAlarm.set_alarm(hour%24,(minute+MIN_OFFSET)%60)
+        if ((0 == self.duskAlarm.get_min()%60) or (1 == self.duskAlarm.get_min()%60)):
+            self.duskAlarm.inc_hour()
 
     # Returns a string with the current morning alarm time
     def get_morning_alarm(self):
