@@ -27,6 +27,7 @@ expect "Menu gatt"
 expect $prompt
 
 send -- "select-attribute /org/bluez/hci0/dev_C0_0F_3E_A9_48_2C/service0009/char000a\r"
+sleep 1
 expect $prompt
 
 #Currently sends an M
